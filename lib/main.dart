@@ -1,20 +1,29 @@
 import 'package:L1_sean/pages/addlist.dart';
+import 'package:L1_sean/pages/IndividualList.dart';
+import 'package:L1_sean/pages/all.dart';
 import 'package:L1_sean/pages/login.dart';
 import 'package:L1_sean/pages/signup.dart';
-import 'package:L1_sean/pages/userlogin.dart';
 import 'package:L1_sean/provider/userProvider.dart';
 import 'pages/home.dart';
 import 'pages/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:L1_sean/utils/global.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+
+var user;
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  user = prefs.getString('user');
   return runApp(ChangeNotifierProvider(
       create: (context) => UserProvider(), child: MyApp()));
 }
 
+
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,14 +33,26 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: "/",
+      initialRoute:  user != null ? "/home" : "/",
+      onGenerateRoute: (settings) {
+        switch(settings.name){
+          case '/addlist':
+            if(settings.arguments != null){
+              Map<String,dynamic> args = settings.arguments;
+              return MaterialPageRoute(builder: (context) => AddList(id: args['id'],iconid: args['iconid'],colorid: args['colorid'],listname: args ['listname']));
+            }else{
+              return MaterialPageRoute(builder: (context) => AddList());
+            }
+        }
+      },
       routes: {
         "/": (context) => Welcome(),
         "/login": (context) => Login(),
         "/signup": (context) => Signup(),
         "/home": (context) => Home(),
-        "/userlogin": (context) => UserLogin(),
-        "/addlist": (context) => AddList(),
+        // "/addlist": (context) => AddList(),
+        '/list': (context) => IndividualList(),
+        '/all': (context) => All(),
       },
     );
   }

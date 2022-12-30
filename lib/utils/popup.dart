@@ -1,6 +1,8 @@
+import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:lottie/lottie.dart';
 
 ToastFuture displayToast(msg, context, color) {
   return showToast(
@@ -14,12 +16,50 @@ ToastFuture displayToast(msg, context, color) {
   );
 }
 
-Future<dynamic> displayDialog(context) {
+// Future<dynamic> displayDialog(context) {
+//   return showDialog(
+//       context: context,
+//       builder: (context) {
+//         return Center(
+//           child: CircularProgressIndicator(),
+//         );
+//       });
+// }
+
+Future displayDialog(msg, context, controller, boolean, page) {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      });
+    barrierDismissible: false,
+    context: context,
+    builder: (context) => Dialog(
+        child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Lottie.asset(
+            boolean ? 'assets/images/success.json' : 'assets/images/fail.json',
+            controller: controller,
+            height: 100,
+            width: 100,
+            repeat: false, onLoaded: (composition) {
+          if (boolean) {
+            switch (page) {
+              case "addlist":
+                controller.forward().whenComplete(() {
+                  Navigator.pushNamed(context, "/home");
+                });
+              break;
+              case "homemenu":
+              controller.forward();
+            }
+          } else {
+            controller.forward();
+          }
+        }),
+        Text(
+          msg,
+          style: secondaryText,
+        ),
+        margin20
+      ],
+    )),
+  );
 }

@@ -1,15 +1,22 @@
+import 'package:L1_sean/model/colorModel.dart';
+import 'package:L1_sean/model/iconModel.dart';
+import 'package:L1_sean/services/listService.dart';
+import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
 class UserProvider extends ChangeNotifier{
 
-  final _auth = FirebaseAuth.instance;
-  
-  // String getCurrentUsername() async {
-  //   var ds = FirebaseFirestore.instance.collection('users').doc(_auth.currentUser.uid).get();
-  //   if(ds != null){
-      
-  //   }
-  //   return null;
-  // }
+  List<ColorModel> colorList;
+  List<IconModel> iconList;
+
+  Future<List<ColorModel>> getColorList() async {
+    colorList = await ListService().fetchColors();
+    notifyListeners();
+    return colorList;
+  }
+
+  getIconList() async {
+    iconList =  await ListService().fetchIcons();
+    notifyListeners();
+  }
 }

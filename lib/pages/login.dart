@@ -2,6 +2,8 @@ import 'package:L1_sean/utils/global.dart';
 import 'package:L1_sean/widgets/arrows.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:L1_sean/services/authService.dart';
+
 class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
@@ -14,7 +16,10 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
+    // TODO: implement dispose
     super.dispose();
+    email.clear();
+    password.clear();
   }
 
   @override
@@ -29,10 +34,8 @@ class _LoginState extends State<Login> {
               Container(
                 child: Text('Login', style: header),
               ),
-              // Container(
-              //   child: SvgPicture.asset(login, height: 200, width: 200),
-              // ),
-              Lottie.asset('assets/images/login.json',height:300,animate: true),
+              Lottie.asset('assets/images/login.json',
+                  height: 300, animate: true),
               emailInputElement(),
               margin20,
               passwordInputElement(),
@@ -45,7 +48,11 @@ class _LoginState extends State<Login> {
                   child: Text('Login'),
                   textColor: Colors.white,
                   onPressed: () async {
-                    Navigator.pushNamed(context, "/home");
+                    var login = await AuthService()
+                        .login(email.text, password.text, context);
+                    if(login) {
+                      Navigator.pushNamed(context, '/home');
+                    }
                   },
                 ),
               ),
@@ -130,8 +137,6 @@ class _LoginState extends State<Login> {
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           onTap: () {
-            email.clear();
-            password.clear();
             Navigator.pushNamed(context, '/signup');
           },
         ),

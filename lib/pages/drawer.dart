@@ -1,12 +1,11 @@
 import 'package:L1_sean/model/menuitem.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class MenuItems {
   static List<MenuItem> all = <MenuItem>[
     MenuItem('Home', Icons.home),
     MenuItem('About Us', Icons.info),
-    MenuItem('logout', Icons.logout)
   ];
 }
 
@@ -35,6 +34,16 @@ class MyDrawer extends StatelessWidget {
               margin20,
               ...MenuItems.all.map(buildItem).toList(),
               Spacer(flex: 2),
+              margin20,
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text("logout"),
+                onTap: () async{
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.remove('user');
+                  Navigator.pushNamed(context,'/');
+                },
+              )
             ],
           ),
         ),
@@ -50,7 +59,6 @@ class MyDrawer extends StatelessWidget {
           leading: Icon(item.icon),
           title: Text(item.title),
           onTap: () {
-            print(item);
             onSelectedItem(item);
           },
         ),

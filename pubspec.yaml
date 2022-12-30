@@ -32,9 +32,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  firebase_core:
-  firebase_auth:
-  cloud_firestore:
   flutter_svg:
   page_transition:
   flutter_styled_toast:
@@ -42,6 +39,14 @@ dev_dependencies:
   flutter_slidable:
   lottie:
   flutter_zoom_drawer:
+  http:
+  shared_preferences:
+  simple_animations:
+  bouncing_widget:
+  widget_circular_animator:
+  flutter_vector_icons:
+  modal_bottom_sheet:
+  flutter_typeahead:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

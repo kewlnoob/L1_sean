@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-
+const ipAddress = "http://192.168.50.200/flutterphp";
 const backgroundColor = Color(0xFFFAFAFA);
 const primaryColor = Color(0xFF8200FF);
 const secondaryColor = Color(0xFFae64f5);
 const thirdColor = Color(0xFF6C63FF);
 const header = TextStyle(fontSize: 25,color: Colors.black);
 const secondaryText = TextStyle(fontSize: 20,color:Colors.black);
-const whiteText = TextStyle(fontSize:15,color: Colors.white,fontWeight: FontWeight.bold);
+const secondaryTextOnPressed = TextStyle(fontSize: 20,color:Colors.grey);
+const whiteText = TextStyle(fontSize:18,color: Colors.white,fontWeight: FontWeight.bold);
 const bigWhiteText = TextStyle(fontSize:30,color: Colors.white,fontWeight: FontWeight.bold,);
 const successColor = Color(0xFF86d28e);
 const failColor = Color(0xFFECBDC2);

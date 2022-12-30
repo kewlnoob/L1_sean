@@ -2,6 +2,7 @@ import 'package:L1_sean/utils/global.dart';
 import 'package:L1_sean/widgets/arrows.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:L1_sean/services/authService.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -13,6 +14,16 @@ class _SignupState extends State<Signup> {
   TextEditingController email = TextEditingController();
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    email.clear();
+    username.clear();
+    password.clear();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +54,11 @@ class _SignupState extends State<Signup> {
               child: Text('Sign Up'),
               textColor: Colors.white,
               onPressed: () async {
-                Navigator.pushNamed(context, "/login");
+                var register = await AuthService().register(
+                    username.text, email.text, password.text, context);
+                if (register) {
+                  Navigator.pushNamed(context, "/login");
+                }
               },
             ),
           ),

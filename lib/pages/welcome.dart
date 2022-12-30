@@ -16,14 +16,6 @@ class Welcome extends StatelessWidget {
             Container(
               child: Text('Welcome to Notes', style: header),
             ),
-            // Container(
-            //   margin: const EdgeInsets.only(left: 50),
-            //   child: SvgPicture.asset(welcomeImage, height: 200, width: 200),
-            // ),
-            // Container(
-            //   margin: const EdgeInsets.only(right: 50),
-            //   child: SvgPicture.asset(welcomeImage1, height: 200, width: 200),
-            // ),
             Lottie.asset('assets/images/todo.json',height:350,animate: true),
             Container(
               width: 250,
