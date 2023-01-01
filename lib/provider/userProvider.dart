@@ -1,5 +1,7 @@
 import 'package:L1_sean/model/colorModel.dart';
 import 'package:L1_sean/model/iconModel.dart';
+import 'package:L1_sean/model/itemModel.dart';
+import 'package:L1_sean/services/itemService.dart';
 import 'package:L1_sean/services/listService.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
@@ -19,4 +21,7 @@ class UserProvider extends ChangeNotifier{
     iconList =  await ListService().fetchIcons();
     notifyListeners();
   }
-}
+
+
+  
+} 

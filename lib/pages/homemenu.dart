@@ -145,7 +145,18 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                                     var item = snapshot.data[index];
                                     return GestureDetector(
                                       onTap: () {
-                                        Navigator.pushNamed(context, "/list");
+                                        if (item.id == null &&
+                                            item.listname == null) {
+                                          displayToast(
+                                              "ListName and ListId is null",
+                                              context,
+                                              failColor);
+                                        }
+                                        Navigator.pushNamed(context, '/list',
+                                            arguments: {
+                                              'listid': int.parse(item.id),
+                                              'listname': item.listname,
+                                            });
                                       },
                                       child: Container(
                                         child: Slidable(
