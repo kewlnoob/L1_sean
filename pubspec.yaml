@@ -44,9 +44,11 @@ dev_dependencies:
   simple_animations:
   bouncing_widget:
   widget_circular_animator:
+  roundcheckbox:
   flutter_vector_icons:
-  modal_bottom_sheet:
   flutter_typeahead:
+  animations:
+  shimmer:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

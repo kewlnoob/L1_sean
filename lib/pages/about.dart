@@ -12,7 +12,7 @@ class _AboutState extends State<About> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: ButtonArrow(context),
+        // leading: ButtonArrow(context),
         title: Text('About Us')
         
       ),

@@ -38,22 +38,24 @@ class ItemService {
     }
   }
 
-  Future<bool> reorderItem(items) async {
+  Future<bool> reorderItem(data) async {
     var url = "$ipAddress/reorder.php";
-    String json = jsonEncode(items);
+    String json = jsonEncode(data);
+    // print(json);
     var response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: json,
     );
-    try {
-      if (jsonDecode(response.body) == "success") {
-        return true;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return false;
+    print(jsonDecode(response.body));
+    // try {
+    //   if ( == "success") {
+    //     return true;
+    //   }
+    // } catch (e) {
+    //   print('hi');
+    // }
+    return true;
   }
 
   Future<bool> checkItem(bool iscompleted, int itemid) async {
@@ -62,6 +64,21 @@ class ItemService {
       var data = {
         "itemid": itemid.toString(),
         "iscompleted": iscompleted ? "1" : "0",
+      };
+      var response = await http.post(url, body: data);
+      if (jsonDecode(response.body) == "success") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> updateName(String name,String id) async {
+    if(name != null && id != null){
+      var url = "$ipAddress/updateItemName.php";
+      var data = {
+        "name": name,
+        "id": id,
       };
       var response = await http.post(url, body: data);
       if (jsonDecode(response.body) == "success") {

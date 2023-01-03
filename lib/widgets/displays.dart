@@ -1,6 +1,5 @@
 import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
-
 Widget displays(IconData icon, String text, Color color, int count,BuildContext context) {
   return GestureDetector(
     onTap: () {

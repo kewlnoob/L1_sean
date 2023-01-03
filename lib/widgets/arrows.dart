@@ -11,7 +11,7 @@ Widget ButtonArrow(BuildContext context) {
             highlightColor: Colors.transparent,
             icon: backButton,
             onPressed: () {
-              Navigator.pushNamed(context, '/home');
+              Navigator.pop(context);
             },
           ),
         ),

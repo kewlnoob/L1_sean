@@ -2,10 +2,11 @@ import 'package:L1_sean/model/menuitem.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 class MenuItems {
   static List<MenuItem> all = <MenuItem>[
-    MenuItem('Home', Icons.home),
-    MenuItem('About Us', Icons.info),
+    MenuItem('Home', Icon(AntDesign.home)),
+    MenuItem('About Us', Icon(Feather.info)),
   ];
 }
 
@@ -56,7 +57,7 @@ class MyDrawer extends StatelessWidget {
         child: ListTile(
           selected: currentItem == item,
           selectedTileColor: Colors.black26,
-          leading: Icon(item.icon),
+          leading: item.icon,
           title: Text(item.title),
           onTap: () {
             onSelectedItem(item);
