@@ -15,7 +15,7 @@ class _AllState extends State<All> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50.0),
         child: AppBar(
-          leading: ButtonArrow(context),
+          leading: ButtonArrow(context,'home'),
           elevation: 0,
           flexibleSpace: Container(),
           backgroundColor: Colors.transparent,

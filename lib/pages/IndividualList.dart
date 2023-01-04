@@ -1,6 +1,9 @@
+import 'package:L1_sean/mapper/itemMapper.dart';
 import 'package:L1_sean/model/itemModel.dart';
+import 'package:L1_sean/pages/additem.dart';
 import 'package:L1_sean/services/itemService.dart';
 import 'package:L1_sean/utils/global.dart';
+import 'package:L1_sean/utils/popup.dart';
 import 'package:L1_sean/widgets/arrows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -10,6 +13,7 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
+import 'package:animations/animations.dart';
 
 class IndividualList extends StatefulWidget {
   final int listid;
@@ -23,7 +27,7 @@ class IndividualList extends StatefulWidget {
 
 class _IndividualListState extends State<IndividualList> {
   int _focusedIndex;
-
+  List<ItemMapper> outerItems = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +36,7 @@ class _IndividualListState extends State<IndividualList> {
         child: AppBar(
           leading: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [ButtonArrow(context)],
+            children: [ButtonArrow(context, 'home')],
           ),
           elevation: 0,
           title: Text(
@@ -54,7 +58,16 @@ class _IndividualListState extends State<IndividualList> {
                     color: Colors.black,
                     icon: _focusedIndex != null
                         ? TextButton(
-                            onPressed: () {
+                            onPressed: () async {
+                              var update = await ItemService().updateName(
+                                  outerItems[_focusedIndex]
+                                      .textEditingController
+                                      .text,
+                                  outerItems[_focusedIndex].id);
+                              if (!update) {
+                                displayToast(
+                                    "Update Name Failed", context, failColor);
+                              }
                               setState(() {
                                 _focusedIndex = null;
                               });
@@ -80,10 +93,13 @@ class _IndividualListState extends State<IndividualList> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       var data = snapshot.data;
-                      List<TextEditingController> _text = [];
+                      List<ItemMapper> _text = [];
                       data.forEach((item) {
-                        _text.add(TextEditingController(text: item.name));
+                        _text.add(ItemMapper(
+                            TextEditingController(text: item.name), item.id));
                       });
+                      outerItems = _text;
+
                       return ReorderableListView(
                         onReorder: (int oldIndex, int newIndex) async {
                           setState(() {
@@ -126,22 +142,26 @@ class _IndividualListState extends State<IndividualList> {
                                   }
                                 },
                                 leading: Container(
-                                  margin: EdgeInsets.only(left:20,right:10),
+                                  margin: EdgeInsets.only(left: 20, right: 10),
                                   child: RoundCheckBox(
-                                    isChecked: item.iscompleted,
-                                    onTap: (bool value) async {
-                                      var update = await ItemService()
-                                          .checkItem(value, int.parse(item.id));
-                                      if (update) {
-                                        setState(() {
-                                          item.iscompleted = value;
-                                        });
-                                      }
-                                    },
-                                    size: 25,
-                                    checkedColor: Colors.white,
-                                    checkedWidget: Icon(Icons.circle,size:20,color: Colors.black,)
-                                  ),
+                                      isChecked: item.iscompleted,
+                                      onTap: (bool value) async {
+                                        var update = await ItemService()
+                                            .checkItem(
+                                                value, int.parse(item.id));
+                                        if (update) {
+                                          setState(() {
+                                            item.iscompleted = value;
+                                          });
+                                        }
+                                      },
+                                      size: 25,
+                                      checkedColor: Colors.white,
+                                      checkedWidget: Icon(
+                                        Icons.circle,
+                                        size: 20,
+                                        color: Colors.black,
+                                      )),
                                 ),
                                 title: AbsorbPointer(
                                   child: TextField(
@@ -151,19 +171,24 @@ class _IndividualListState extends State<IndividualList> {
                                         ? true
                                         : false,
                                     style: TextStyle(
-                                      
                                         decoration: item.iscompleted
                                             ? TextDecoration.lineThrough
                                             : TextDecoration.none),
-                                    controller: _text[index],
+                                    controller:
+                                        _text[index].textEditingController,
                                     decoration: InputDecoration(
                                         border: InputBorder.none),
                                   ),
                                 ),
-                                subtitle: Text('40char\neuhfeufh\neuhfeufh\neuhfeufh\neuhfeufh',style: TextStyle(color: Colors.grey[500]),),
+                                subtitle: Text(
+                                  '40char\neuhfeufh\neuhfeufh\neuhfeufh\neuhfeufh',
+                                  style: TextStyle(color: Colors.grey[500]),
+                                ),
                                 trailing: _focusedIndex != null &&
                                         _focusedIndex == index
-                                    ? Icon(Icons.info)
+                                    ? Container(
+                                        margin: EdgeInsets.only(right: 20),
+                                        child: Icon(Feather.info))
                                     : null,
                               ),
                             ),
@@ -177,6 +202,21 @@ class _IndividualListState extends State<IndividualList> {
               ],
             ),
           ],
+        ),
+      ),
+      floatingActionButton: OpenContainer(
+        transitionDuration: Duration(seconds: 1),
+        closedShape: CircleBorder(),
+        closedColor: primaryColor,
+        openBuilder: (context, _) => AddItem(),
+        closedBuilder: (context, action) => Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: primaryColor,
+          ),
+          height: 50,
+          width: 50,
+          child: Icon(Icons.add, color: Colors.white),
         ),
       ),
     );

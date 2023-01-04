@@ -5,11 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:L1_sean/utils/global.dart';
 
 class ItemService {
-  Future<bool> addItem(String name, int position) async {
+  Future<bool> addItem(String name,String description,String inputUrl,bool flagged) async {
     var url = "$ipAddress/addItem.php";
     var data = {
       "name": name,
-      "position": position.toString(),
+      "description": description,
+      "url": inputUrl,
+      "flagged": flagged ? "1" : "0",
     };
     var response = await http.post(url, body: data);
     if (jsonDecode(response.body) == "success") {
@@ -47,15 +49,15 @@ class ItemService {
       headers: {'Content-Type': 'application/json'},
       body: json,
     );
-    print(jsonDecode(response.body));
-    // try {
-    //   if ( == "success") {
-    //     return true;
-    //   }
-    // } catch (e) {
-    //   print('hi');
-    // }
-    return true;
+
+    try {
+      if (jsonDecode(response.body) == "success") {
+        return true;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 
   Future<bool> checkItem(bool iscompleted, int itemid) async {
@@ -73,8 +75,8 @@ class ItemService {
     return false;
   }
 
-  Future<bool> updateName(String name,String id) async {
-    if(name != null && id != null){
+  Future<bool> updateName(String name, String id) async {
+    if (name != null && id != null) {
       var url = "$ipAddress/updateItemName.php";
       var data = {
         "name": name,
@@ -87,4 +89,6 @@ class ItemService {
     }
     return false;
   }
+
+
 }

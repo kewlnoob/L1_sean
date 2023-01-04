@@ -33,7 +33,7 @@ class _SignupState extends State<Signup> {
       alignment: Alignment.topCenter,
       child: Column(
         children: [
-          ButtonArrow(context),
+          ButtonArrow(context,'welcome'),
           margin20,
           Container(
             child: Text('Sign Up', style: header),

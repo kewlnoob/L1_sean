@@ -1,19 +1,32 @@
 import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
 
-
-Widget ButtonArrow(BuildContext context) {
-      return Container(
-        child: Align(
-          alignment: Alignment.topLeft,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            icon: backButton,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+Widget ButtonArrow(BuildContext context, String pageName) {
+  return Container(
+    child: Align(
+      alignment: Alignment.topLeft,
+      child: IconButton(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        icon: Icon(
+          Icons.keyboard_backspace_rounded,
+          color: Colors.grey,
+          size: 30,
         ),
-      );
-    }
+        onPressed: () {
+          switch (pageName) {
+            case "home":
+              Navigator.pushNamed(context, '/home');
+              break;
+            case "welcome":
+              Navigator.pushNamed(context, '/');
+              break;
+
+            default:
+              Navigator.of(context).pop();
+          }
+        },
+      ),
+    ),
+  );
+}

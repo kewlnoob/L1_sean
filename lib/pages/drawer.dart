@@ -3,10 +3,13 @@ import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:widget_circular_animator/widget_circular_animator.dart';
+
 class MenuItems {
   static List<MenuItem> all = <MenuItem>[
     MenuItem('Home', Icon(AntDesign.home)),
     MenuItem('About Us', Icon(Feather.info)),
+    MenuItem('Statistics', Icon(Foundation.graph_bar)),
   ];
 }
 
@@ -27,11 +30,27 @@ class MyDrawer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DrawerHeader(
-                  child: CircleAvatar(
-                radius: 52,
-              )),
-              // Spacer(),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.6,
+                child: WidgetCircularAnimator(
+                  size: 150,
+                  innerIconsSize: 3,
+                  outerIconsSize: 3,
+                  innerAnimation: Curves.easeInOutBack,
+                  outerAnimation: Curves.easeInOutBack,
+                  innerColor: backgroundColor,
+                  outerColor: redColor,
+                  innerAnimationSeconds: 10,
+                  outerAnimationSeconds: 10,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.grey[200]),
+                    child: CircleAvatar(
+                      radius: 520,
+                    ),
+                  ),
+                ),
+              ),
               margin20,
               ...MenuItems.all.map(buildItem).toList(),
               Spacer(flex: 2),
@@ -39,10 +58,10 @@ class MyDrawer extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text("logout"),
-                onTap: () async{
+                onTap: () async {
                   final prefs = await SharedPreferences.getInstance();
                   prefs.remove('user');
-                  Navigator.pushNamed(context,'/');
+                  Navigator.pushNamed(context, '/');
                 },
               )
             ],

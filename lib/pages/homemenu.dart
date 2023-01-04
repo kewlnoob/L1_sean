@@ -9,6 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+
 class HomeMenu extends StatefulWidget {
   @override
   State<HomeMenu> createState() => _HomeMenuState();
@@ -81,7 +82,6 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
         }),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Colors.black),
         actions: [
           Container(
               margin: const EdgeInsets.only(right: 20),
@@ -113,11 +113,13 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                       children: [
                         FadeAnimation(
                             1,
+                            'up',
                             displays(FontAwesome.inbox, 'All', Colors.grey, 3,
                                 context)),
                         margin20,
                         FadeAnimation(
                             1,
+                            'up',
                             displays(Entypo.archive, 'Archived',
                                 Colors.blueAccent, 3, context))
                       ],
@@ -128,19 +130,25 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                       children: [
                         FadeAnimation(
                             1.5,
+                            'up',
                             displays(FontAwesome.check, 'Completed',
                                 Colors.green[400], 3, context)),
                         margin20,
                         FadeAnimation(
                             1.5,
-                            displays(Foundation.flag, 'Flagged', Colors.orange[300],
-                                3, context)),
+                            'up',
+                            displays(Foundation.flag, 'Flagged',
+                                Colors.orange[300], 3, context)),
                       ],
                     ),
                     margin20,
-                    Text(
-                      'My Lists',
-                      style: header,
+                    FadeAnimation(
+                      2,
+                      'up',
+                      Text(
+                        'My Lists',
+                        style: header,
+                      ),
                     ),
                     SizedBox(height: 10),
                     ConstrainedBox(
@@ -252,7 +260,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                 secondaryActions: [
                   IconSlideAction(
                     caption: 'Info',
-                    color: backgroundColor,
+                    color: thirdColor,
                     icon: Feather.info,
                     onTap: () {
                       Navigator.pushNamed(context, '/addlist', arguments: {
@@ -265,7 +273,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                   ),
                   IconSlideAction(
                     caption: 'Delete',
-                    color: backgroundColor,
+                    color: redColor,
                     icon: MaterialCommunityIcons.delete,
                     onTap: () async {
                       var deletelist = await ListService().deleteList(item.id);

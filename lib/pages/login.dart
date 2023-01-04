@@ -30,7 +30,7 @@ class _LoginState extends State<Login> {
           alignment: Alignment.topCenter,
           child: Column(
             children: [
-              ButtonArrow(context),
+              ButtonArrow(context,'welcome'),
               Container(
                 child: Text('Login', style: header),
               ),

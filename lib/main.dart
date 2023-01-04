@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: ThemeData(
-          fontFamily: 'SF-Pro-Rounded',
+          fontFamily: 'SansPro-Bold',
           scaffoldBackgroundColor: backgroundColor,
         ),
         debugShowCheckedModeBanner: false,

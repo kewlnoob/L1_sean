@@ -49,6 +49,7 @@ dev_dependencies:
   flutter_typeahead:
   animations:
   shimmer:
+  rive:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -77,9 +78,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: SF-Pro-Rounded
+    - family: SansPro-Bold
       fonts:
-        - asset: assets/fonts/SF-Pro-Rounded.ttf
+        - asset: assets/fonts/SourceSansPro-Bold.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
