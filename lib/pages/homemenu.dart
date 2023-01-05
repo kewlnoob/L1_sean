@@ -20,11 +20,13 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
   AnimationController controller;
   AnimationController slideController;
   bool isActive = false;
+  bool animated = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     asyncMethod();
+
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
 
@@ -111,69 +113,66 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        FadeAnimation(
-                            1,
-                            'up',
-                            displays(FontAwesome.inbox, 'All', Colors.grey, 3,
-                                context)),
+                        animated
+                            ? FadeAnimation(
+                                1,
+                                'up',
+                                displays(FontAwesome.inbox, 'All', Colors.grey,
+                                    3, context))
+                            : displays(FontAwesome.inbox, 'All', Colors.grey, 3,
+                                context),
                         margin20,
-                        FadeAnimation(
-                            1,
-                            'up',
-                            displays(Entypo.archive, 'Archived',
-                                Colors.blueAccent, 3, context))
+                        animated
+                            ? FadeAnimation(
+                                1,
+                                'up',
+                                displays(Entypo.archive, 'Archived',
+                                    Colors.blueAccent, 3, context))
+                            : displays(Entypo.archive, 'Archived',
+                                Colors.blueAccent, 3, context)
                       ],
                     ),
                     margin20,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        FadeAnimation(
-                            1.5,
-                            'up',
-                            displays(FontAwesome.check, 'Completed',
-                                Colors.green[400], 3, context)),
+                        animated
+                            ? FadeAnimation(
+                                1.5,
+                                'up',
+                                displays(FontAwesome.check, 'Completed',
+                                    Colors.green[400], 3, context))
+                            : displays(FontAwesome.check, 'Completed',
+                                Colors.green[400], 3, context),
                         margin20,
-                        FadeAnimation(
-                            1.5,
-                            'up',
-                            displays(Foundation.flag, 'Flagged',
-                                Colors.orange[300], 3, context)),
+                        animated
+                            ? FadeAnimation(
+                                1.5,
+                                'up',
+                                displays(Foundation.flag, 'Flagged',
+                                    Colors.orange[300], 3, context))
+                            : displays(Foundation.flag, 'Flagged',
+                                Colors.orange[300], 3, context)
                       ],
                     ),
                     margin20,
-                    FadeAnimation(
-                      2,
-                      'up',
-                      Text(
-                        'My Lists',
-                        style: header,
-                      ),
-                    ),
+                    animated
+                        ? FadeAnimation(
+                            2,
+                            'up',
+                            Text(
+                              'My Lists',
+                              style: header,
+                            ),
+                          )
+                        : Text(
+                            'My Lists',
+                            style: header,
+                          ),
                     SizedBox(height: 10),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxHeight: 300,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: FutureBuilder(
-                            future: ListService().fetchList(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return AnimatedList(
-                                  shrinkWrap: true,
-                                  initialItemCount: snapshot.data.length,
-                                  itemBuilder: (context, index, animation) {
-                                    return _buildItem(snapshot.data,
-                                        snapshot.data[index], animation, index);
-                                  },
-                                );
-                              }
-                              return CircularProgressIndicator();
-                            }),
-                      ),
-                    )
+                    animated
+                        ? FadeAnimation(2.5, 'up', futureList())
+                        : futureList()
                   ],
                 ),
               ),
@@ -221,111 +220,120 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildItem(snapshot, item, animation, index) {
-    Animation<double> anim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: slideController,
-        curve: Interval((1 / snapshot.length) * index, 1.0,
-            curve: Curves.easeInOut),
-      ),
-    );
-    List<Color> color = [Colors.red, Colors.green, Colors.black];
-    slideController.forward();
-    return SlideTransition(
-        position: Tween<Offset>(
-          begin: Offset(3.0, 0.0),
-          end: Offset.zero,
-        ).animate(anim),
-        child: ClipRect(
-          child: GestureDetector(
-            onTap: () {
-              if (item.id == null && item.listname == null) {
-                displayToast("ListName and ListId is null", context, failColor);
-              }
-              Navigator.pushNamed(context, '/list', arguments: {
-                'listid': int.parse(item.id),
-                'listname': item.listname,
-              });
-            },
-            child: Container(
-              child: Slidable(
-                key: Key(item.listname),
-                dismissal: SlidableDismissal(
-                  child: SlidableDrawerDismissal(),
-                  onDismissed: (type) {
-                    print(type);
+  Widget futureList() {
+    return FutureBuilder(
+        future: ListService().fetchList(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var item = snapshot.data;
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: 300,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: ListView.builder(
+                  shrinkWrap: true, 
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        if (item[index].id == null &&
+                            item[index].listname == null) {
+                          displayToast("ListName and ListId is null", context,
+                              failColor);
+                        }
+                        Navigator.pushNamed(context, '/list', arguments: {
+                          'listid': int.parse(item[index].id),
+                          'listname': item[index].listname,
+                        });
+                      },
+                      child: Container(
+                        child: Slidable(
+                          key: Key(item[index].listname),
+                          actionPane: SlidableDrawerActionPane(),
+                          secondaryActions: [
+                            IconSlideAction(
+                              caption: 'Info',
+                              color: thirdColor,
+                              icon: Feather.info,
+                              onTap: () {
+                                Navigator.pushNamed(context, '/addlist',
+                                    arguments: {
+                                      'iconid': int.parse(item[index].iconid),
+                                      'colorid': int.parse(item[index].colorid),
+                                      'id': item[index].id,
+                                      'listname': item[index].listname,
+                                    });
+                              },
+                            ),
+                            IconSlideAction(
+                              caption: 'Delete',
+                              color: redColor,
+                              icon: MaterialCommunityIcons.delete,
+                              onTap: () async {
+                                // print(item.id);
+                                // print(index);
+                                var deletelist = await ListService()
+                                    .deleteList(item[index].id);
+                                if (deletelist) {
+                                  setState(() {
+                                    animated = false;
+                                  });
+                                  displayDialog('Success', context, popup, true,
+                                      'homemenu');
+                                } else {
+                                  displayDialog('Fail', context, popup, false,
+                                      'homemenu');
+                                }
+                              },
+                            ),
+                          ],
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: secondaryColor,
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/images/dashboard.png'),
+                                    fit: BoxFit.fill)),
+                            width: MediaQuery.of(context).size.width,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        width: 1, color: Colors.white)),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(int.parse(item[index].color))
+                                        .withOpacity(0.9),
+                                    Color(int.parse(item[index].color))
+                                        .withOpacity(0.5)
+                                  ],
+                                ),
+                              ),
+                              child: ListTile(
+                                leading: Icon(
+                                    IconData(int.parse(item[index].icon),
+                                        fontFamily: 'MaterialIcons'),
+                                    color: Colors.white),
+                                title: Text(
+                                  item[index].listname,
+                                  style: whiteText,
+                                ),
+                                trailing: Icon(Icons.arrow_forward_ios_rounded,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
                   },
                 ),
-                actionPane: SlidableDrawerActionPane(),
-                secondaryActions: [
-                  IconSlideAction(
-                    caption: 'Info',
-                    color: thirdColor,
-                    icon: Feather.info,
-                    onTap: () {
-                      Navigator.pushNamed(context, '/addlist', arguments: {
-                        'iconid': int.parse(item.iconid),
-                        'colorid': int.parse(item.colorid),
-                        'id': item.id,
-                        'listname': item.listname,
-                      });
-                    },
-                  ),
-                  IconSlideAction(
-                    caption: 'Delete',
-                    color: redColor,
-                    icon: MaterialCommunityIcons.delete,
-                    onTap: () async {
-                      var deletelist = await ListService().deleteList(item.id);
-                      if (deletelist) {
-                        displayDialog(
-                            'Success', context, popup, true, 'homemenu');
-                        Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => this.build(context)));
-                      } else {
-                        displayDialog(
-                            'Fail', context, popup, false, 'homemenu');
-                      }
-                    },
-                  ),
-                ],
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: secondaryColor,
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/dashboard.png'),
-                          fit: BoxFit.fill)),
-                  width: MediaQuery.of(context).size.width,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(width: 1, color: Colors.white)),
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(int.parse(item.color)).withOpacity(0.9),
-                          Color(int.parse(item.color)).withOpacity(0.5)
-                        ],
-                      ),
-                    ),
-                    child: ListTile(
-                      leading: Icon(
-                          IconData(int.parse(item.icon),
-                              fontFamily: 'MaterialIcons'),
-                          color: Colors.white),
-                      title: Text(
-                        item.listname,
-                        style: whiteText,
-                      ),
-                      trailing: Icon(Icons.arrow_forward_ios_rounded,
-                          color: Colors.white),
-                    ),
-                  ),
-                ),
               ),
-            ),
-          ),
-        ));
+            );
+          }
+          return CircularProgressIndicator();
+        });
   }
 }

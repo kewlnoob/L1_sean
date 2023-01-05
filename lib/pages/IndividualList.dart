@@ -100,7 +100,7 @@ class _IndividualListState extends State<IndividualList> {
                             TextEditingController(text: item.name), item.id));
                       });
                       outerItems = _text;
-
+                      
                       return ReorderableListView(
                         onReorder: (int oldIndex, int newIndex) async {
                           setState(() {
@@ -118,6 +118,23 @@ class _IndividualListState extends State<IndividualList> {
                         children: data.map<Widget>((item) {
                           int index = data.indexOf(item);
                           return Slidable(
+                            secondaryActions: [
+                              IconSlideAction(
+                                  caption: 'Delete',
+                                  color: redColor,
+                                  icon: MaterialCommunityIcons.delete,
+                                  onTap: () async {}),
+                              IconSlideAction(
+                                  caption: 'Delete',
+                                  color: redColor,
+                                  icon: MaterialCommunityIcons.delete,
+                                  onTap: () async {}),
+                              IconSlideAction(
+                                  caption: 'Delete',
+                                  color: redColor,
+                                  icon: MaterialCommunityIcons.delete,
+                                  onTap: () async {}),
+                            ],
                             key: ValueKey(item),
                             actionPane: SlidableDrawerActionPane(),
                             child: Container(
@@ -157,7 +174,7 @@ class _IndividualListState extends State<IndividualList> {
                                         }
                                       },
                                       size: 25,
-                                      checkedColor: Colors.white,
+                                      checkedColor: backgroundColor,
                                       checkedWidget: Icon(
                                         Icons.circle,
                                         size: 20,
@@ -182,14 +199,25 @@ class _IndividualListState extends State<IndividualList> {
                                   ),
                                 ),
                                 subtitle: Text(
-                                  '40char\neuhfeufh\neuhfeufh\neuhfeufh\neuhfeufh',
+                                  item.description != null
+                                      ? item.description.toString()
+                                      : "",
                                   style: TextStyle(color: Colors.grey[500]),
                                 ),
                                 trailing: _focusedIndex != null &&
                                         _focusedIndex == index
-                                    ? Container(
-                                        margin: EdgeInsets.only(right: 20),
-                                        child: Icon(Feather.info))
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context, '/additem', arguments: {
+                                            "item": item,
+                                            'listname': widget.listname
+                                          });
+                                        },
+                                        child: Container(
+                                            margin: EdgeInsets.only(right: 20),
+                                            child: Icon(Feather.info)),
+                                      )
                                     : null,
                               ),
                             ),
@@ -213,7 +241,7 @@ class _IndividualListState extends State<IndividualList> {
           transitionDuration: Duration(seconds: 1),
           closedShape: CircleBorder(),
           closedColor: primaryColor,
-          openBuilder: (context, _) => AddItem(widget.listid),
+          openBuilder: (context, _) => AddItem(listid: widget.listid),
           closedBuilder: (context, action) {
             return Container(
               decoration: BoxDecoration(

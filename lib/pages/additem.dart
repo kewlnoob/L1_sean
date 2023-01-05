@@ -1,3 +1,4 @@
+import 'package:L1_sean/model/itemModel.dart';
 import 'package:L1_sean/services/itemService.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:L1_sean/utils/popup.dart';
@@ -9,7 +10,9 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class AddItem extends StatefulWidget {
   final int listid;
-  const AddItem(this.listid);
+  final ItemModel item;
+  final String listname;
+  const AddItem({this.listid, this.item, this.listname});
 
   @override
   State<AddItem> createState() => _AddItemState();
@@ -24,9 +27,16 @@ class _AddItemState extends State<AddItem> {
   var urlController = TextEditingController();
   @override
   void initState() {
+    if (widget.item != null &&
+        widget.listid == null &&
+        widget.listname != null) {
+      nameController.text = widget.item.name;
+      descController.text = widget.item.description;
+      urlController.text = widget.item.url;
+      isFlagged = true;
+    }
     // TODO: implement initState
     super.initState();
-    setState(() {});
   }
 
   @override
@@ -76,20 +86,45 @@ class _AddItemState extends State<AddItem> {
                         return null;
                       }
                     }
-
-                    String desc = descController.text;
-                    desc = desc.replaceAll("\n", "\\n");
-                    var item = await ItemService().addItem(
-                        nameController.text,
-                        desc,
-                        urlController.text,
-                        isFlagged,
-                        widget.listid.toString());
-                    setState(() => {_check = true});
-                    if (item) {
-                      Navigator.of(context).pop();
+                    if (widget.item != null && widget.listid == null) {
+                      // update item
+                      String desc = descController.text;
+                      desc = desc.replaceAll("\n", "\\n");
+                      var item = await ItemService().updateItem(
+                          nameController.text,
+                          desc,
+                          urlController.text,
+                          isFlagged,
+                          widget.item.id.toString());
+                      setState(() => {_check = true});
+                      if (item) {
+                        displayToast(
+                            'Update Item Successfully', context, successColor);
+                        Navigator.pushNamed(context, '/list', arguments: {
+                          'listname': widget.listname,
+                          'listid': int.parse(widget.item.listid)
+                        });
+                      } else {
+                        displayToast('Add Item Failed', context, failColor);
+                      }
                     } else {
-                      displayToast('Add Item Failed', context, failColor);
+                      // add item
+                      String desc = descController.text;
+                      desc = desc.replaceAll("\n", "\\n");
+                      var item = await ItemService().addItem(
+                          nameController.text,
+                          desc,
+                          urlController.text,
+                          isFlagged,
+                          widget.listid.toString());
+                      setState(() => {_check = true});
+                      if (item) {
+                        displayToast(
+                            'Item Added Successfully', context, successColor);
+                        Navigator.of(context).pop();
+                      } else {
+                        displayToast('Add Item Failed', context, failColor);
+                      }
                     }
                   },
                   child: Container(

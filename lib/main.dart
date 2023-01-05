@@ -1,3 +1,4 @@
+import 'package:L1_sean/pages/additem.dart';
 import 'package:L1_sean/pages/addlist.dart';
 import 'package:L1_sean/pages/IndividualList.dart';
 import 'package:L1_sean/pages/all.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:page_transition/page_transition.dart';
 
 var user;
 Future<void> main() async {
@@ -63,6 +65,18 @@ class MyApp extends StatelessWidget {
                           listname: args['listname'],
                         ));
               }
+              break;
+            case '/additem':
+              if (settings.arguments != null) {
+                Map<String, dynamic> args = settings.arguments;
+                if (args['item'] != null) {
+                  return PageTransition(
+                      duration: Duration(milliseconds: 300),
+                      child: AddItem(item: args['item'], listname: args['listname']),
+                      type: PageTransitionType.bottomToTop);
+                }
+              }
+              break;
           }
         },
         routes: {
