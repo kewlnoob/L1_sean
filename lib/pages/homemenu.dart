@@ -277,7 +277,6 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                     icon: MaterialCommunityIcons.delete,
                     onTap: () async {
                       var deletelist = await ListService().deleteList(item.id);
-
                       if (deletelist) {
                         displayDialog(
                             'Success', context, popup, true, 'homemenu');

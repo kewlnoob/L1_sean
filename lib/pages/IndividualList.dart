@@ -28,6 +28,7 @@ class IndividualList extends StatefulWidget {
 class _IndividualListState extends State<IndividualList> {
   int _focusedIndex;
   List<ItemMapper> outerItems = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,20 +206,25 @@ class _IndividualListState extends State<IndividualList> {
         ),
       ),
       floatingActionButton: OpenContainer(
-        transitionDuration: Duration(seconds: 1),
-        closedShape: CircleBorder(),
-        closedColor: primaryColor,
-        openBuilder: (context, _) => AddItem(),
-        closedBuilder: (context, action) => Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: primaryColor,
-          ),
-          height: 50,
-          width: 50,
-          child: Icon(Icons.add, color: Colors.white),
-        ),
-      ),
+          onClosed: (data) {
+            //refresh page
+            setState(() {});
+          },
+          transitionDuration: Duration(seconds: 1),
+          closedShape: CircleBorder(),
+          closedColor: primaryColor,
+          openBuilder: (context, _) => AddItem(widget.listid),
+          closedBuilder: (context, action) {
+            return Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: primaryColor,
+              ),
+              height: 50,
+              width: 50,
+              child: Icon(Icons.add, color: Colors.white),
+            );
+          }),
     );
   }
 }

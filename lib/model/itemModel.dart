@@ -12,6 +12,9 @@ class ItemModel {
         this.iscompleted,
         this.listid,
         this.position,
+        this.url,
+        this.description,
+        this.isflagged
     });
 
     String id;
@@ -19,6 +22,9 @@ class ItemModel {
     bool iscompleted;
     String listid;
     String position;
+    String url;
+    String description;
+    bool isflagged;
 
     factory ItemModel.fromJson(Map<String, dynamic> json) => ItemModel(
         id: json["id"],
@@ -26,6 +32,10 @@ class ItemModel {
         iscompleted: json["iscompleted"],
         listid: json["listid"],
         position: json["position"],
+        url: json["url"],
+        description: json["description"],
+        isflagged: json["isflagged"],
+
     );
 
     Map<String, dynamic> toJson() => {
@@ -34,5 +44,8 @@ class ItemModel {
         "iscompleted": iscompleted,
         "listid": listid,
         "position": position,
+        "url":url,
+        "description":description,
+        "isflagged":isflagged,
     };
 }

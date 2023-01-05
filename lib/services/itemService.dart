@@ -5,13 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:L1_sean/utils/global.dart';
 
 class ItemService {
-  Future<bool> addItem(String name,String description,String inputUrl,bool flagged) async {
+  Future<bool> addItem(String name,String description,String inputUrl,bool flagged,String listid) async {
     var url = "$ipAddress/addItem.php";
     var data = {
       "name": name,
       "description": description,
       "url": inputUrl,
       "flagged": flagged ? "1" : "0",
+      "listid":listid
     };
     var response = await http.post(url, body: data);
     if (jsonDecode(response.body) == "success") {

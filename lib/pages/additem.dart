@@ -1,10 +1,15 @@
+import 'package:L1_sean/services/itemService.dart';
 import 'package:L1_sean/utils/global.dart';
+import 'package:L1_sean/utils/popup.dart';
 import 'package:L1_sean/widgets/arrows.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class AddItem extends StatefulWidget {
-  const AddItem();
+  final int listid;
+  const AddItem(this.listid);
 
   @override
   State<AddItem> createState() => _AddItemState();
@@ -13,9 +18,27 @@ class AddItem extends StatefulWidget {
 class _AddItemState extends State<AddItem> {
   bool _back = false;
   bool _check = false;
+  bool isFlagged = false;
+  var nameController = TextEditingController();
+  var descController = TextEditingController();
+  var urlController = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {});
+  }
 
-  var textController = TextEditingController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    nameController.dispose();
+    descController.dispose();
+    urlController.dispose();
+  }
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +57,7 @@ class _AddItemState extends State<AddItem> {
                   ),
                   onPressed: () => {
                         setState(() => {_back = true}),
-                        Navigator.of(context).pop(),
+                        Navigator.of(context).pop()
                       }),
             ],
           ),
@@ -44,16 +67,35 @@ class _AddItemState extends State<AddItem> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    String text = textController.text;
-                    text = text.replaceAll("\n", "\\n");
-                    print(text);
+                  onTap: () async {
+                    if (urlController.text.isNotEmpty) {
+                      bool validURL = Uri.parse(urlController.text).isAbsolute;
+
+                      if (!validURL) {
+                        displayToast('URL is not valid', context, failColor);
+                        return null;
+                      }
+                    }
+
+                    String desc = descController.text;
+                    desc = desc.replaceAll("\n", "\\n");
+                    var item = await ItemService().addItem(
+                        nameController.text,
+                        desc,
+                        urlController.text,
+                        isFlagged,
+                        widget.listid.toString());
                     setState(() => {_check = true});
+                    if (item) {
+                      Navigator.of(context).pop();
+                    } else {
+                      displayToast('Add Item Failed', context, failColor);
+                    }
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: 10),
                     child:
-                        Text('Done', style: _check ? thirdGreyText : thirdText),
+                        Text('Done', style: _check ? thirdText : thirdGreyText),
                   ),
                 )
               ],
@@ -74,39 +116,116 @@ class _AddItemState extends State<AddItem> {
             child: Column(
               children: [
                 Container(
-                  height: 200,
                   decoration: BoxDecoration(
-                      color: secondaryColor,
-                      borderRadius: BorderRadius.circular(20)),
+                      color: thirdColor,
+                      borderRadius: BorderRadius.circular(15)),
+                  padding: EdgeInsets.all(20),
                   child: Column(
                     children: [
                       Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField()),
-                      Container(
-                        constraints: BoxConstraints(
-                          maxHeight: 100,
+                        child: TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            hintText: 'Name',
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 2, color: backgroundColor),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 2, color: backgroundColor),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
                         ),
-                        padding: const EdgeInsets.all(8.0),
+                      ),
+                      margin20,
+                      Container(
                         child: SingleChildScrollView(
                           child: TextField(
-                            minLines: 1,
+                            minLines: 5,
                             maxLines: 5,
-                            controller: textController,
+                            decoration: InputDecoration(
+                              hintText: 'Description',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    width: 2, color: backgroundColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    width: 2, color: backgroundColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            controller: descController,
                             keyboardType: TextInputType.multiline,
                           ),
                         ),
                       ),
+                      margin20,
                       Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField()),
+                        child: TextField(
+                          controller: urlController,
+                          decoration: InputDecoration(
+                            hintText: 'URL',
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 2, color: backgroundColor),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 2, color: backgroundColor),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
                 margin20,
-                // Container(
-                //   child: ,
-                // )
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  decoration: BoxDecoration(
+                      color: thirdColor,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 6),
+                            decoration: BoxDecoration(
+                                color: Colors.orangeAccent,
+                                borderRadius: BorderRadius.circular(10)),
+                            padding: EdgeInsets.all(6),
+                            child: Icon(
+                              Foundation.flag,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            'Flagged',
+                            style: whiteText,
+                          ),
+                        ],
+                      ),
+                      CupertinoSwitch(
+                        trackColor: Colors.grey,
+                        activeColor: Colors.greenAccent,
+                        value: isFlagged,
+                        onChanged: (value) => {
+                          setState(() => {isFlagged = value})
+                        },
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
           ),
