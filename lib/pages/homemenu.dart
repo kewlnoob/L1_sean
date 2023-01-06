@@ -21,12 +21,13 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
   AnimationController slideController;
   bool isActive = false;
   bool animated = true;
+  String allCount;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     asyncMethod();
-
+    fetchCounts();
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
 
@@ -44,6 +45,13 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 1000),
     );
+  }
+
+  void fetchCounts() async {
+    var all = await ListService().fetchAllCount();
+    setState(() {
+      allCount = all;
+    });
   }
 
   void asyncMethod() async {
@@ -118,18 +126,18 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                                 1,
                                 'up',
                                 displays(FontAwesome.inbox, 'All', Colors.grey,
-                                    3, context))
-                            : displays(FontAwesome.inbox, 'All', Colors.grey, 3,
-                                context),
+                                    allCount != null ? allCount : '0', context))
+                            : displays(FontAwesome.inbox, 'All', Colors.grey,
+                                allCount != null ? allCount : '0', context),
                         margin20,
                         animated
                             ? FadeAnimation(
                                 1,
                                 'up',
                                 displays(Entypo.archive, 'Archived',
-                                    Colors.blueAccent, 3, context))
+                                    Colors.blueAccent, '3', context))
                             : displays(Entypo.archive, 'Archived',
-                                Colors.blueAccent, 3, context)
+                                Colors.blueAccent, '3', context)
                       ],
                     ),
                     margin20,
@@ -141,18 +149,18 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                                 1.5,
                                 'up',
                                 displays(FontAwesome.check, 'Completed',
-                                    Colors.green[400], 3, context))
+                                    Colors.green[400], '3', context))
                             : displays(FontAwesome.check, 'Completed',
-                                Colors.green[400], 3, context),
+                                Colors.green[400], '3', context),
                         margin20,
                         animated
                             ? FadeAnimation(
                                 1.5,
                                 'up',
                                 displays(Foundation.flag, 'Flagged',
-                                    Colors.orange[300], 3, context))
+                                    Colors.orange[300], '3', context))
                             : displays(Foundation.flag, 'Flagged',
-                                Colors.orange[300], 3, context)
+                                Colors.orange[300], '3', context)
                       ],
                     ),
                     margin20,
@@ -233,7 +241,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: ListView.builder(
-                  shrinkWrap: true, 
+                  shrinkWrap: true,
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
@@ -272,8 +280,6 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                               color: redColor,
                               icon: MaterialCommunityIcons.delete,
                               onTap: () async {
-                                // print(item.id);
-                                // print(index);
                                 var deletelist = await ListService()
                                     .deleteList(item[index].id);
                                 if (deletelist) {

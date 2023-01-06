@@ -1,5 +1,6 @@
 import 'package:L1_sean/model/colorModel.dart';
 import 'package:L1_sean/model/iconModel.dart';
+import 'package:L1_sean/model/listItemModel.dart';
 import 'package:L1_sean/model/listModel.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:L1_sean/utils/popup.dart';
@@ -27,8 +28,6 @@ class ListService {
       "colorid": colorid.toString(),
       'id': id.toString(),
     };
-    print("Color: " + colorid.toString());
-    print("Icon: " + iconid.toString());
     var response = await http.post(url, body: data);
     if (jsonDecode(response.body) == "success") {
       return true;
@@ -73,5 +72,35 @@ class ListService {
     var url = "$ipAddress/getIcons.php";
     final response = await http.get(url);
     return iconFromJson(response.body);
+  }
+
+  Future<String> fetchAllCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+
+    if (value != null) {
+      var url =
+          "$ipAddress/fetchAllCount.php?userid=" + jsonDecode(value)['userid'];
+      final response = await http.get(url);
+      if (jsonDecode(response.body)['count'] != null) {
+        return jsonDecode(response.body)['count'];
+      }
+    }
+    return "0";
+  }
+
+  Future<List<ListItemModel>> fetchAllList() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+
+    if (value != null) {
+      var url =
+          "$ipAddress/fetchAll.php?userid=" + jsonDecode(value)['userid'];
+      final response = await http.get(url);
+      if (jsonDecode(response.body) != null) {
+        return listItemModelFromJson(response.body);
+      }
+    }
+    return null;
   }
 }

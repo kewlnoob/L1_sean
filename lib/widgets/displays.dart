@@ -1,6 +1,6 @@
 import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
-Widget displays(IconData icon, String text, Color color, int count,BuildContext context) {
+Widget displays(IconData icon, String text, Color color, String count,BuildContext context) {
   return GestureDetector(
     onTap: () {
       Navigator.pushNamed(context, "/all");
@@ -52,7 +52,7 @@ Widget displays(IconData icon, String text, Color color, int count,BuildContext 
               top: 6,
               right: 15,
               child: Text(
-                count.toString(),
+                count,
                 style: bigWhiteText,
               ),
             ),

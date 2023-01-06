@@ -12,8 +12,8 @@ const secondaryColor = Color(0xFFae64f5);
 const thirdColor = Color(0xFF6C63FF);
 const blackColor = Color(0xFF32184B);
 const redColor = Color(0xFFFF4779);
-const header = TextStyle(fontSize: 25,color: blackColor,fontFeatures: [FontFeature.proportionalFigures()],fontFamily: 'SansPro-Bold',);
-const secondaryText = TextStyle(fontSize: 20,color:blackColor,fontFeatures: [FontFeature.proportionalFigures()],fontFamily: 'SansPro-Bold',);
+const header = TextStyle(fontSize: 30,color: blackColor,fontFeatures: [FontFeature.proportionalFigures()],fontFamily: 'SansPro-Bold',);
+const secondaryText = TextStyle(fontSize: 18,color:blackColor,fontFeatures: [FontFeature.proportionalFigures()],fontFamily: 'SansPro-Bold',);
 const thirdText = TextStyle(fontSize: 15,color:blackColor,fontFeatures: [FontFeature.proportionalFigures()],fontFamily: 'SansPro-Bold',);
 const thirdGreyText = TextStyle(fontSize: 15,color:Colors.grey,fontFeatures: [FontFeature.proportionalFigures()],fontFamily: 'SansPro-Bold',);
 

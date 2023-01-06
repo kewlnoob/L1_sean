@@ -9,6 +9,7 @@ class MenuItems {
   static List<MenuItem> all = <MenuItem>[
     MenuItem('Home', Icon(AntDesign.home)),
     MenuItem('About Us', Icon(Feather.info)),
+    MenuItem('Profile', Icon(MaterialCommunityIcons.account)),
     MenuItem('Statistics', Icon(Foundation.graph_bar)),
   ];
 }

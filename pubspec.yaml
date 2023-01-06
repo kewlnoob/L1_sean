@@ -32,7 +32,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_svg:
+  # flutter_svg:
   page_transition:
   flutter_styled_toast:
   provider:
@@ -42,14 +42,16 @@ dev_dependencies:
   http:
   shared_preferences:
   simple_animations:
-  bouncing_widget:
+  # bouncing_widget:
   widget_circular_animator:
   roundcheckbox:
   flutter_vector_icons:
-  flutter_typeahead:
+  # flutter_typeahead:
   animations:
-  shimmer:
-  rive:
+  # shimmer:
+  # rive:
+  group_list_view:
+  app_popup_menu:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

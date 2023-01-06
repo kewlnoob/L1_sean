@@ -8,7 +8,7 @@ import 'package:L1_sean/widgets/arrows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:bouncing_widget/bouncing_widget.dart';
+
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/widgets.dart';
@@ -100,7 +100,7 @@ class _IndividualListState extends State<IndividualList> {
                             TextEditingController(text: item.name), item.id));
                       });
                       outerItems = _text;
-                      
+
                       return ReorderableListView(
                         onReorder: (int oldIndex, int newIndex) async {
                           setState(() {

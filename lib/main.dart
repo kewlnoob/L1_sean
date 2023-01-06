@@ -72,10 +72,18 @@ class MyApp extends StatelessWidget {
                 if (args['item'] != null) {
                   return PageTransition(
                       duration: Duration(milliseconds: 300),
-                      child: AddItem(item: args['item'], listname: args['listname']),
+                      child: AddItem(
+                          item: args['item'], listname: args['listname']),
                       type: PageTransitionType.bottomToTop);
                 }
               }
+              break;
+            case '/all':
+              return PageTransition(
+                  duration: Duration(milliseconds: 300),
+                  child: All(),
+                  type: PageTransitionType.rightToLeft);
+
               break;
           }
         },
@@ -86,7 +94,7 @@ class MyApp extends StatelessWidget {
           "/home": (context) => Home(),
           // "/addlist": (context) => AddList(),
           // '/list': (context) => IndividualList(),
-          '/all': (context) => All(),
+          // '/all': (context) => All(),
         },
       ),
     );
