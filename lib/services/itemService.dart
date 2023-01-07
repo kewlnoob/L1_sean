@@ -122,11 +122,12 @@ class ItemService {
     return false;
   }
 
-    Future<bool> flagItem(String id) async {
+    Future<bool> flagItem(String id, bool flag) async {
     if (id != null) {
       var url = "$ipAddress/flagItem.php";
       var data = {
         "id": id,
+        "flag": flag ? "0" : "1",
       };
       var response = await http.post(url, body: data);
       if (jsonDecode(response.body) == "success") {

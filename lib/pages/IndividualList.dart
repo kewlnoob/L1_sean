@@ -120,21 +120,26 @@ class _IndividualListState extends State<IndividualList> {
                           return Slidable(
                             secondaryActions: [
                               IconSlideAction(
-                                  caption: 'Flagged',
+                                  caption:
+                                      item.isflagged ? 'Unflagged' : 'Flagged',
                                   color: Colors.orange[300],
                                   icon: Foundation.flag,
                                   foregroundColor: Colors.white,
                                   onTap: () async {
-                                    print(item.isflagged);
+                                    var prev = item.isflagged;
                                     var flag = await ItemService()
-                                        .flagItem(item.id);
+                                        .flagItem(item.id, item.isflagged);
                                     if (flag) {
                                       setState(() {});
-                                      displayToast('Item has been flagged',
-                                          context, successColor);
+                                      displayToast(
+                                          prev
+                                              ? 'Item has been Unflagged'
+                                              : 'Item has been Flagged',
+                                          context,
+                                          successColor);
                                     } else {
-                                      displayToast('Flagged failed', context,
-                                          failColor);
+                                      displayToast(
+                                          'Flagged failed', context, failColor);
                                     }
                                   }),
                               IconSlideAction(
@@ -214,22 +219,36 @@ class _IndividualListState extends State<IndividualList> {
                                         color: Colors.black,
                                       )),
                                 ),
-                                title: AbsorbPointer(
-                                  child: TextField(
-                                    key: ValueKey(item),
-                                    autofocus: _focusedIndex != null &&
-                                            index == _focusedIndex
-                                        ? true
-                                        : false,
-                                    style: TextStyle(
-                                        decoration: item.iscompleted
-                                            ? TextDecoration.lineThrough
-                                            : TextDecoration.none),
-                                    controller:
-                                        _text[index].textEditingController,
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none),
-                                  ),
+                                title: Row(
+                                  children: [
+                                    AbsorbPointer(
+                                      child: Container(
+                                        width: 200,
+                                        child: TextField(
+                                          key: ValueKey(item),
+                                          autofocus: _focusedIndex != null &&
+                                                  index == _focusedIndex
+                                              ? true
+                                              : false,
+                                          style: TextStyle(
+                                              decoration: item.iscompleted
+                                                  ? TextDecoration.lineThrough
+                                                  : TextDecoration.none),
+                                          controller: _text[index]
+                                              .textEditingController,
+                                          decoration: InputDecoration(
+                                              border: InputBorder.none),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 50,
+                                    ),
+                                    item.isflagged
+                                        ? Icon(Foundation.flag,
+                                            color: Colors.orange[300])
+                                        : Container(),
+                                  ],
                                 ),
                                 subtitle: Text(
                                   item.description != null
