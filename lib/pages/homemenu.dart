@@ -92,15 +92,6 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
         }),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: [
-          Container(
-              margin: const EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.account_circle_sharp,
-                size: 50,
-                color: primaryColor,
-              ))
-        ],
       ),
       body: SafeArea(
         child: Container(

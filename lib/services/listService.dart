@@ -89,13 +89,14 @@ class ListService {
     return "0";
   }
 
-  Future<List<ListItemModel>> fetchAllList() async {
+  Future<List<ListItemModel>> fetchAllList(String show) async {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString('user');
 
     if (value != null) {
       var url =
-          "$ipAddress/fetchAll.php?userid=" + jsonDecode(value)['userid'];
+          "$ipAddress/fetchAll.php?userid=" + jsonDecode(value)['userid'] + 
+          '&show=' + show;
       final response = await http.get(url);
       if (jsonDecode(response.body) != null) {
         return listItemModelFromJson(response.body);

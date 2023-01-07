@@ -22,8 +22,8 @@ class ItemService {
     return false;
   }
 
-  Future<bool> updateItem(
-      String name, String description, String inputUrl, bool flagged, String id) async {
+  Future<bool> updateItem(String name, String description, String inputUrl,
+      bool flagged, String id) async {
     var url = "$ipAddress/updateItem.php";
     var data = {
       "name": name,
@@ -42,7 +42,7 @@ class ItemService {
   Future<List<ItemModel>> fetchItems(int listid) async {
     if (listid == null) return null;
 
-    var url = "$ipAddress/getitems.php?listid=" + listid.toString();
+    var url = "$ipAddress/getItems.php?listid=" + listid.toString();
     final response = await http.get(url);
     List<ItemModel> json = itemFromJson(response.body);
     for (var i = 0; i < json.length; i++) {
@@ -62,7 +62,6 @@ class ItemService {
   Future<bool> reorderItem(data) async {
     var url = "$ipAddress/reorder.php";
     String json = jsonEncode(data);
-    // print(json);
     var response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -100,6 +99,65 @@ class ItemService {
       var data = {
         "name": name,
         "id": id,
+      };
+      var response = await http.post(url, body: data);
+      if (jsonDecode(response.body) == "success") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> archiveItem(String id) async {
+    if (id != null) {
+      var url = "$ipAddress/archiveItem.php";
+      var data = {
+        "id": id,
+      };
+      var response = await http.post(url, body: data);
+      if (jsonDecode(response.body) == "success") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+    Future<bool> flagItem(String id) async {
+    if (id != null) {
+      var url = "$ipAddress/flagItem.php";
+      var data = {
+        "id": id,
+      };
+      var response = await http.post(url, body: data);
+      if (jsonDecode(response.body) == "success") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> deleteItem(String id) async {
+    if (id != null) {
+      var url = "$ipAddress/deleteItem.php";
+      var data = {
+        "id": id,
+      };
+      var response = await http.post(url, body: data);
+      if (jsonDecode(response.body) == "success") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> deleteUserLists() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+
+    if (jsonDecode(value)['userid'] != null) {
+      var url = "$ipAddress/deleteUserLists.php";
+      var data = {
+        "userid": jsonDecode(value)['userid'],
       };
       var response = await http.post(url, body: data);
       if (jsonDecode(response.body) == "success") {

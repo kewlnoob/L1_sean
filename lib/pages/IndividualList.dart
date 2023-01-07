@@ -120,20 +120,53 @@ class _IndividualListState extends State<IndividualList> {
                           return Slidable(
                             secondaryActions: [
                               IconSlideAction(
-                                  caption: 'Delete',
-                                  color: redColor,
-                                  icon: MaterialCommunityIcons.delete,
-                                  onTap: () async {}),
+                                  caption: 'Flagged',
+                                  color: Colors.orange[300],
+                                  icon: Foundation.flag,
+                                  foregroundColor: Colors.white,
+                                  onTap: () async {
+                                    print(item.isflagged);
+                                    var flag = await ItemService()
+                                        .flagItem(item.id);
+                                    if (flag) {
+                                      setState(() {});
+                                      displayToast('Item has been flagged',
+                                          context, successColor);
+                                    } else {
+                                      displayToast('Flagged failed', context,
+                                          failColor);
+                                    }
+                                  }),
+                              IconSlideAction(
+                                  caption: 'Archived',
+                                  color: Colors.blueAccent,
+                                  icon: Entypo.archive,
+                                  onTap: () async {
+                                    var archive = await ItemService()
+                                        .archiveItem(item.id);
+                                    if (archive) {
+                                      displayToast('Item archived successfully',
+                                          context, successColor);
+                                    } else {
+                                      displayToast('Archived failed', context,
+                                          failColor);
+                                    }
+                                  }),
                               IconSlideAction(
                                   caption: 'Delete',
                                   color: redColor,
                                   icon: MaterialCommunityIcons.delete,
-                                  onTap: () async {}),
-                              IconSlideAction(
-                                  caption: 'Delete',
-                                  color: redColor,
-                                  icon: MaterialCommunityIcons.delete,
-                                  onTap: () async {}),
+                                  onTap: () async {
+                                    var delete =
+                                        await ItemService().deleteItem(item.id);
+                                    if (delete) {
+                                      displayToast('Item deleted successfully',
+                                          context, successColor);
+                                    } else {
+                                      displayToast('Deletion failed', context,
+                                          failColor);
+                                    }
+                                  }),
                             ],
                             key: ValueKey(item),
                             actionPane: SlidableDrawerActionPane(),

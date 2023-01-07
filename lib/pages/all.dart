@@ -1,6 +1,7 @@
-import 'package:L1_sean/model/listItemModel.dart';
+import 'package:L1_sean/services/itemService.dart';
 import 'package:L1_sean/services/listService.dart';
 import 'package:L1_sean/utils/global.dart';
+import 'package:L1_sean/utils/popup.dart';
 import 'package:L1_sean/widgets/arrows.dart';
 import 'package:flutter/material.dart';
 import 'package:group_list_view/group_list_view.dart';
@@ -15,6 +16,7 @@ class All extends StatefulWidget {
 }
 
 class _AllState extends State<All> {
+  bool showCompleted = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -40,7 +42,7 @@ class _AllState extends State<All> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Show Completed', style: TextStyle(fontSize: 13)),
+                      Text(showCompleted ? 'Hide Completed' : 'Show Completed', style: TextStyle(fontSize: 13)),
                       Icon(AntDesign.eyeo),
                     ],
                   ),
@@ -50,14 +52,32 @@ class _AllState extends State<All> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Delete List', style: TextStyle(fontSize: 13)),
-                      Icon(MaterialCommunityIcons.delete,color: redColor,),
+                      Text('Delete Lists', style: TextStyle(fontSize: 13)),
+                      Icon(
+                        MaterialCommunityIcons.delete,
+                        color: redColor,
+                      ),
                     ],
                   ),
                 ),
               ],
               // initialValue: 2,
-              onSelected: (int value) {},
+              onSelected: (int value) async {
+                if(value == 1){
+                  setState(() {
+                    showCompleted = !showCompleted;
+                  });
+                }
+                if (value == 2) {
+                  var delete = await ItemService().deleteUserLists();
+                  if (delete) {
+                    setState(() {});
+                    displayToast("All Items Deleted", context, successColor);
+                  } else {
+                    displayToast("Deletion failed", context, failColor);
+                  }
+                }
+              },
               onCanceled: () {},
               tooltip: "Here's a tip for you.",
               elevation: 12,
@@ -75,10 +95,10 @@ class _AllState extends State<All> {
             children: [
               Expanded(
                 child: FutureBuilder(
-                  future: ListService().fetchAllList(),
+                  future: showCompleted ? ListService().fetchAllList('show') : ListService().fetchAllList('hide'),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      List<ListItemModel> list = snapshot.data;
+                      var list = snapshot.data;
                       return GroupListView(
                         sectionsCount: list.length,
                         groupHeaderBuilder:
@@ -129,7 +149,23 @@ class _AllState extends State<All> {
                                       caption: 'Delete',
                                       color: redColor,
                                       icon: MaterialCommunityIcons.delete,
-                                      onTap: () async {}),
+                                      onTap: () async {
+                                        var delete = await ItemService()
+                                            .deleteItem(list[index.section]
+                                                .items[index.index]
+                                                .id
+                                                .toString());
+                                        if (delete) {
+                                          setState(() {});
+                                          displayToast(
+                                              "Successfully deleted item",
+                                              context,
+                                              successColor);
+                                        } else {
+                                          displayToast("Deletion failed",
+                                              context, failColor);
+                                        }
+                                      }),
                                 ],
                                 key: ValueKey(index.index),
                                 actionPane: SlidableDrawerActionPane(),
@@ -148,7 +184,25 @@ class _AllState extends State<All> {
                                         Container(
                                           child: RoundCheckBox(
                                             size: 20,
-                                            onTap: (selected) {},
+                                            isChecked: list[index.section]
+                                                .items[index.index]
+                                                .iscompleted,
+                                            onTap: (bool value) async {
+                                              var update = await ItemService()
+                                                  .checkItem(
+                                                      value,
+                                                      int.parse(list[
+                                                              index.section]
+                                                          .items[index.index]
+                                                          .id));
+                                              if (update) {
+                                                setState(() {
+                                                  list[index.section]
+                                                      .items[index.index]
+                                                      .iscompleted = value;
+                                                });
+                                              }
+                                            },
                                             uncheckedColor: backgroundColor,
                                             checkedColor: backgroundColor,
                                             checkedWidget: Icon(
