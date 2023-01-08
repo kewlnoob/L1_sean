@@ -24,6 +24,7 @@ class ItemService {
 
   Future<bool> updateItem(String name, String description, String inputUrl,
       bool flagged, String id) async {
+    print(flagged);
     var url = "$ipAddress/updateItem.php";
     var data = {
       "name": name,
@@ -122,7 +123,21 @@ class ItemService {
     return false;
   }
 
-    Future<bool> flagItem(String id, bool flag) async {
+  Future<bool> unarchiveItem(String id) async {
+    if (id != null) {
+      var url = "$ipAddress/unarchiveItem.php";
+      var data = {
+        "id": id,
+      };
+      var response = await http.post(url, body: data);
+      if (jsonDecode(response.body) == "success") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> flagItem(String id, bool flag) async {
     if (id != null) {
       var url = "$ipAddress/flagItem.php";
       var data = {
@@ -157,6 +172,23 @@ class ItemService {
 
     if (jsonDecode(value)['userid'] != null) {
       var url = "$ipAddress/deleteUserLists.php";
+      var data = {
+        "userid": jsonDecode(value)['userid'],
+      };
+      var response = await http.post(url, body: data);
+      if (jsonDecode(response.body) == "success") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> deleteArchiveItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+
+    if (jsonDecode(value)['userid'] != null) {
+      var url = "$ipAddress/deleteArchiveItems.php";
       var data = {
         "userid": jsonDecode(value)['userid'],
       };

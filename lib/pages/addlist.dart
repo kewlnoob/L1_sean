@@ -79,8 +79,8 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                       selectedColorIndex != null &&
                       selectedIconIndex != null) {
                     if (widget.id != null) {
-                      print("Color: " + selectedColorIndex.toString());
-                      print("Icon: " + selectedIconIndex.toString());
+                      // print("Color: " + selectedColorIndex.toString());
+                      // print("Icon: " + selectedIconIndex.toString());
                       var editList = await ListService().editList(
                           widget.id,
                           myController.text,

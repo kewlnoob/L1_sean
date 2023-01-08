@@ -4,22 +4,42 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:widget_circular_animator/widget_circular_animator.dart';
+import 'dart:convert';
 
 class MenuItems {
   static List<MenuItem> all = <MenuItem>[
     MenuItem('Home', Icon(AntDesign.home)),
-    MenuItem('About Us', Icon(Feather.info)),
     MenuItem('Profile', Icon(MaterialCommunityIcons.account)),
+    MenuItem('About Us', Icon(Feather.info)),
     MenuItem('Statistics', Icon(Foundation.graph_bar)),
   ];
 }
 
-class MyDrawer extends StatelessWidget {
+class MyDrawer extends StatefulWidget {
   final MenuItem currentItem;
   final ValueChanged<MenuItem> onSelectedItem;
-
   const MyDrawer({Key key, this.currentItem, this.onSelectedItem})
       : super(key: key);
+  @override
+  State<MyDrawer> createState() => _MyDrawerState();
+}
+
+class _MyDrawerState extends State<MyDrawer> {
+  String image;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    findImage();
+  }
+
+  findImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+    this.setState(() {
+      image = imagelink + jsonDecode(value)['image'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +68,8 @@ class MyDrawer extends StatelessWidget {
                         shape: BoxShape.circle, color: Colors.grey[200]),
                     child: CircleAvatar(
                       radius: 520,
+                      backgroundImage:
+                          image != null ? NetworkImage(image) : null,
                     ),
                   ),
                 ),
@@ -62,7 +84,7 @@ class MyDrawer extends StatelessWidget {
                 onTap: () async {
                   final prefs = await SharedPreferences.getInstance();
                   prefs.remove('user');
-                  Navigator.pushNamed(context, '/');
+                  Navigator.pushReplacementNamed(context, '/');
                 },
               )
             ],
@@ -75,12 +97,12 @@ class MyDrawer extends StatelessWidget {
   Widget buildItem(MenuItem item) => ListTileTheme(
         selectedColor: Colors.white,
         child: ListTile(
-          selected: currentItem == item,
+          selected: widget.currentItem == item,
           selectedTileColor: Colors.black26,
           leading: item.icon,
           title: Text(item.title),
           onTap: () {
-            onSelectedItem(item);
+            widget.onSelectedItem(item);
           },
         ),
       );

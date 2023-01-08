@@ -10,18 +10,12 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:app_popup_menu/app_popup_menu.dart';
 
-class All extends StatefulWidget {
+class Archived extends StatefulWidget {
   @override
-  State<All> createState() => _AllState();
+  State<Archived> createState() => _ArchivedState();
 }
 
-class _AllState extends State<All> {
-  bool showCompleted = false;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+class _ArchivedState extends State<Archived> {
 
   @override
   Widget build(BuildContext context) {
@@ -42,18 +36,7 @@ class _AllState extends State<All> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(showCompleted ? 'Hide Completed' : 'Show Completed',
-                          style: TextStyle(fontSize: 13)),
-                      showCompleted ? Icon(Feather.eye_off) : Icon(Feather.eye),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 2,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Delete Lists', style: TextStyle(fontSize: 13)),
+                      Text('Delete Archive Items', style: TextStyle(fontSize: 13)),
                       Icon(
                         MaterialCommunityIcons.delete,
                         color: redColor,
@@ -65,15 +48,10 @@ class _AllState extends State<All> {
               // initialValue: 2,
               onSelected: (int value) async {
                 if (value == 1) {
-                  setState(() {
-                    showCompleted = !showCompleted;
-                  });
-                }
-                if (value == 2) {
-                  var delete = await ItemService().deleteUserLists();
+                  var delete = await ItemService().deleteArchiveItems();
                   if (delete) {
                     setState(() {});
-                    displayToast("All Items Deleted", context, successColor);
+                    displayToast("All Archive Items Deleted", context, successColor);
                   } else {
                     displayToast("Deletion failed", context, failColor);
                   }
@@ -96,9 +74,7 @@ class _AllState extends State<All> {
             children: [
               Expanded(
                 child: FutureBuilder(
-                  future: showCompleted
-                      ? ListService().fetchAllList('show')
-                      : ListService().fetchAllList('hide'),
+                  future: ListService().fetchArchiveList(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       var list = snapshot.data;
@@ -138,16 +114,26 @@ class _AllState extends State<All> {
                               borderRadius: BorderRadius.circular(10),
                               child: Slidable(
                                 secondaryActions: [
-                                  // IconSlideAction(
-                                  //     caption: 'Archived',
-                                  //     color: redColor,
-                                  //     icon: MaterialCommunityIcons.delete,
-                                  //     onTap: () async {}),
-                                  // IconSlideAction(
-                                  //     caption: 'Flagged',
-                                  //     color: redColor,
-                                  //     icon: MaterialCommunityIcons.delete,
-                                  //     onTap: () async {}),
+                                  IconSlideAction(
+                                      caption: 'Unarchived',
+                                      color: Colors.blueAccent,
+                                      icon: Entypo.archive,
+                                      onTap: () async {
+                                        var unarchive = await ItemService()
+                                            .unarchiveItem(list[index.section]
+                                                .items[index.index]
+                                                .id);
+                                        if (unarchive) {
+                                          setState(() {});
+                                          displayToast(
+                                              "Item has been unarchived",
+                                              context,
+                                              failColor);
+                                        } else {
+                                          displayToast("Unarchive failed",
+                                              context, failColor);
+                                        }
+                                      }),
                                   IconSlideAction(
                                       caption: 'Delete',
                                       color: redColor,

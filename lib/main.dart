@@ -2,7 +2,9 @@ import 'package:L1_sean/pages/additem.dart';
 import 'package:L1_sean/pages/addlist.dart';
 import 'package:L1_sean/pages/IndividualList.dart';
 import 'package:L1_sean/pages/all.dart';
+import 'package:L1_sean/pages/archived.dart';
 import 'package:L1_sean/pages/login.dart';
+import 'package:L1_sean/pages/priority.dart';
 import 'package:L1_sean/pages/signup.dart';
 import 'package:L1_sean/provider/itemProvider.dart';
 import 'package:L1_sean/provider/userProvider.dart';
@@ -55,15 +57,15 @@ class MyApp extends StatelessWidget {
                 return MaterialPageRoute(builder: (context) => AddList());
               }
               break;
-
             case '/list':
               if (settings.arguments != null) {
                 Map<String, dynamic> args = settings.arguments;
                 return MaterialPageRoute(
-                    builder: (context) => IndividualList(
-                          listid: args['listid'],
-                          listname: args['listname'],
-                        ));
+                  builder: (context) => IndividualList(
+                    listid: args['listid'],
+                    listname: args['listname'],
+                  ),
+                );
               }
               break;
             case '/additem':
@@ -73,7 +75,10 @@ class MyApp extends StatelessWidget {
                   return PageTransition(
                       duration: Duration(milliseconds: 300),
                       child: AddItem(
-                          item: args['item'], listname: args['listname']),
+                        item: args['item'],
+                        listname: args['listname'],
+                        isflagged: args['isflagged'],
+                      ),
                       type: PageTransitionType.bottomToTop);
                 }
               }
@@ -83,7 +88,18 @@ class MyApp extends StatelessWidget {
                   duration: Duration(milliseconds: 300),
                   child: All(),
                   type: PageTransitionType.rightToLeft);
-
+              break;
+            case '/archived':
+              return PageTransition(
+                  duration: Duration(milliseconds: 300),
+                  child: Archived(),
+                  type: PageTransitionType.rightToLeft);
+              break;
+            case '/priority':
+              return PageTransition(
+                  duration: Duration(milliseconds: 300),
+                  child: Priority(),
+                  type: PageTransitionType.rightToLeft);
               break;
           }
         },

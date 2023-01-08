@@ -22,6 +22,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
   bool isActive = false;
   bool animated = true;
   String allCount;
+  String archiveCount;
   @override
   void initState() {
     // TODO: implement initState
@@ -49,8 +50,10 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
 
   void fetchCounts() async {
     var all = await ListService().fetchAllCount();
+    var archive = await ListService().fetchArchiveCount();
     setState(() {
       allCount = all;
+      archiveCount = archive;
     });
   }
 
@@ -119,16 +122,16 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                                 displays(FontAwesome.inbox, 'All', Colors.grey,
                                     allCount != null ? allCount : '0', context))
                             : displays(FontAwesome.inbox, 'All', Colors.grey,
-                                allCount != null ? allCount : '0', context),
+                                allCount != null ?  allCount : '0', context),
                         margin20,
                         animated
                             ? FadeAnimation(
                                 1,
                                 'up',
                                 displays(Entypo.archive, 'Archived',
-                                    Colors.blueAccent, '3', context))
+                                    Colors.blueAccent, archiveCount != null ? archiveCount : '0', context))
                             : displays(Entypo.archive, 'Archived',
-                                Colors.blueAccent, '3', context)
+                                Colors.blueAccent, archiveCount != null ? archiveCount : '0', context)
                       ],
                     ),
                     margin20,

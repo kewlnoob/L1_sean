@@ -16,10 +16,10 @@ Widget ButtonArrow(BuildContext context, String pageName) {
         onPressed: () {
           switch (pageName) {
             case "home":
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushReplacementNamed(context, '/home');
               break;
             case "welcome":
-              Navigator.pushNamed(context, '/');
+              Navigator.pushReplacementNamed(context, '/');
               break;
 
             default:

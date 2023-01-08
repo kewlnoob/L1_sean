@@ -89,14 +89,44 @@ class ListService {
     return "0";
   }
 
+  Future<String> fetchArchiveCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+
+    if (value != null) {
+      var url = "$ipAddress/fetchArchiveCount.php?userid=" +
+          jsonDecode(value)['userid'];
+      final response = await http.get(url);
+      if (jsonDecode(response.body)['count'] != null) {
+        return jsonDecode(response.body)['count'];
+      }
+    }
+    return "0";
+  }
+
   Future<List<ListItemModel>> fetchAllList(String show) async {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString('user');
 
     if (value != null) {
-      var url =
-          "$ipAddress/fetchAll.php?userid=" + jsonDecode(value)['userid'] + 
-          '&show=' + show;
+      var url = "$ipAddress/fetchAll.php?userid=" +
+          jsonDecode(value)['userid'] +
+          '&show=' +
+          show;
+      final response = await http.get(url);
+      if (jsonDecode(response.body) != null) {
+        return listItemModelFromJson(response.body);
+      }
+    }
+    return null;
+  }
+
+  Future<List<ListItemModel>> fetchArchiveList() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+
+    if (value != null) {
+      var url = "$ipAddress/fetchArchive.php?userid=" + jsonDecode(value)['userid'];
       final response = await http.get(url);
       if (jsonDecode(response.body) != null) {
         return listItemModelFromJson(response.body);

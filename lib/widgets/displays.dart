@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 Widget displays(IconData icon, String text, Color color, String count,BuildContext context) {
   return GestureDetector(
     onTap: () {
-      Navigator.pushNamed(context, "/all");
+      switch(text){
+        case 'All':
+          Navigator.pushNamed(context, "/all");
+        break;
+        case 'Archived':
+          Navigator.pushNamed(context, "/archived");
+        break;
+      }
+      
     },
     child: Container(
       height: 70,
