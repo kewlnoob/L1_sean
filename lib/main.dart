@@ -34,85 +34,95 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ItemProvider>(
             create: (context) => ItemProvider())
       ],
-      child: MaterialApp(
-        theme: ThemeData(
-          fontFamily: 'SansPro-Bold',
-          scaffoldBackgroundColor: backgroundColor,
-        ),
-        debugShowCheckedModeBanner: false,
-        title: 'Material App',
-        initialRoute: user != null ? "/home" : "/",
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case '/addlist':
-              if (settings.arguments != null) {
-                Map<String, dynamic> args = settings.arguments;
-                return MaterialPageRoute(
-                    builder: (context) => AddList(
-                        id: args['id'],
-                        iconid: args['iconid'],
-                        colorid: args['colorid'],
-                        listname: args['listname']));
-              } else {
-                return MaterialPageRoute(builder: (context) => AddList());
+      
+      builder: (context,_){
+        return App();
+      },
+    );
+  }
+}
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<UserProvider>(context, listen: false);
+    return MaterialApp(
+      themeMode: provider.themeMode,
+      theme: MyThemes.lightTheme,
+      darkTheme: MyThemes.darkTheme,
+      debugShowCheckedModeBanner: false,
+      title: 'Material App',
+      initialRoute: user != null ? "/home" : "/",
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/addlist':
+            if (settings.arguments != null) {
+              Map<String, dynamic> args = settings.arguments;
+              return MaterialPageRoute(
+                  builder: (context) => AddList(
+                      id: args['id'],
+                      iconid: args['iconid'],
+                      colorid: args['colorid'],
+                      listname: args['listname']));
+            } else {
+              return MaterialPageRoute(builder: (context) => AddList());
+            }
+            break;
+          case '/list':
+            if (settings.arguments != null) {
+              Map<String, dynamic> args = settings.arguments;
+              return MaterialPageRoute(
+                builder: (context) => IndividualList(
+                  listid: args['listid'],
+                  listname: args['listname'],
+                ),
+              );
+            }
+            break;
+          case '/additem':
+            if (settings.arguments != null) {
+              Map<String, dynamic> args = settings.arguments;
+              if (args['item'] != null) {
+                return PageTransition(
+                    duration: Duration(milliseconds: 300),
+                    child: AddItem(
+                      item: args['item'],
+                      listname: args['listname'],
+                      isflagged: args['isflagged'],
+                    ),
+                    type: PageTransitionType.bottomToTop);
               }
-              break;
-            case '/list':
-              if (settings.arguments != null) {
-                Map<String, dynamic> args = settings.arguments;
-                return MaterialPageRoute(
-                  builder: (context) => IndividualList(
-                    listid: args['listid'],
-                    listname: args['listname'],
-                  ),
-                );
-              }
-              break;
-            case '/additem':
-              if (settings.arguments != null) {
-                Map<String, dynamic> args = settings.arguments;
-                if (args['item'] != null) {
-                  return PageTransition(
-                      duration: Duration(milliseconds: 300),
-                      child: AddItem(
-                        item: args['item'],
-                        listname: args['listname'],
-                        isflagged: args['isflagged'],
-                      ),
-                      type: PageTransitionType.bottomToTop);
-                }
-              }
-              break;
-            case '/all':
-              return PageTransition(
-                  duration: Duration(milliseconds: 300),
-                  child: All(),
-                  type: PageTransitionType.rightToLeft);
-              break;
-            case '/archived':
-              return PageTransition(
-                  duration: Duration(milliseconds: 300),
-                  child: Archived(),
-                  type: PageTransitionType.rightToLeft);
-              break;
-            case '/priority':
-              return PageTransition(
-                  duration: Duration(milliseconds: 300),
-                  child: Priority(),
-                  type: PageTransitionType.rightToLeft);
-              break;
-          }
-        },
-        routes: {
-          "/": (context) => Welcome(),
-          "/login": (context) => Login(),
-          "/signup": (context) => Signup(),
-          "/home": (context) => Home(),
-          // "/addlist": (context) => AddList(),
-          // '/list': (context) => IndividualList(),
-          // '/all': (context) => All(),
-        },
-      ),
+            }
+            break;
+          case '/all':
+            return PageTransition(
+                duration: Duration(milliseconds: 300),
+                child: All(),
+                type: PageTransitionType.rightToLeft);
+            break;
+          case '/archived':
+            return PageTransition(
+                duration: Duration(milliseconds: 300),
+                child: Archived(),
+                type: PageTransitionType.rightToLeft);
+            break;
+          case '/priority':
+            return PageTransition(
+                duration: Duration(milliseconds: 300),
+                child: Priority(),
+                type: PageTransitionType.rightToLeft);
+            break;
+        }
+      },
+      routes: {
+        "/": (context) => Welcome(),
+        "/login": (context) => Login(),
+        "/signup": (context) => Signup(),
+        "/home": (context) => Home(),
+        // "/addlist": (context) => AddList(),
+        // '/list': (context) => IndividualList(),
+        // '/all': (context) => All(),
+      },
     );
   }
 }

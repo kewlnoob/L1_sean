@@ -50,6 +50,7 @@ dev_dependencies:
   animations:
   # shimmer:
   # rive:
+  day_night_switcher:
   group_list_view:
   app_popup_menu:
 # For information on the generic Dart part of this file, see the

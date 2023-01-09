@@ -2,6 +2,7 @@ import 'package:L1_sean/provider/userProvider.dart';
 import 'package:L1_sean/services/listService.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:L1_sean/utils/popup.dart';
+import 'package:L1_sean/widgets/ChangeThemeButton.dart';
 import 'package:L1_sean/widgets/displays.dart';
 import 'package:L1_sean/widgets/fade.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:day_night_switcher/day_night_switcher.dart';
 
 class HomeMenu extends StatefulWidget {
   @override
@@ -80,6 +82,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: Builder(builder: (context) {
@@ -95,6 +98,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
         }),
         elevation: 0,
         backgroundColor: Colors.transparent,
+        actions: [Container(height:100,width:70,margin:EdgeInsets.only(right:30),child: ChangeThemeButton())],
       ),
       body: SafeArea(
         child: Container(
@@ -122,16 +126,24 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                                 displays(FontAwesome.inbox, 'All', Colors.grey,
                                     allCount != null ? allCount : '0', context))
                             : displays(FontAwesome.inbox, 'All', Colors.grey,
-                                allCount != null ?  allCount : '0', context),
+                                allCount != null ? allCount : '0', context),
                         margin20,
                         animated
                             ? FadeAnimation(
                                 1,
                                 'up',
-                                displays(Entypo.archive, 'Archived',
-                                    Colors.blueAccent, archiveCount != null ? archiveCount : '0', context))
-                            : displays(Entypo.archive, 'Archived',
-                                Colors.blueAccent, archiveCount != null ? archiveCount : '0', context)
+                                displays(
+                                    Entypo.archive,
+                                    'Archived',
+                                    Colors.blueAccent,
+                                    archiveCount != null ? archiveCount : '0',
+                                    context))
+                            : displays(
+                                Entypo.archive,
+                                'Archived',
+                                Colors.blueAccent,
+                                archiveCount != null ? archiveCount : '0',
+                                context)
                       ],
                     ),
                     margin20,
