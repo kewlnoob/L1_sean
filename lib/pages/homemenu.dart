@@ -95,7 +95,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
               icon: AnimatedIcon(
-                color: Colors.black,
+                color: Theme.of(context).iconTheme.color,
                 icon: AnimatedIcons.menu_close,
                 progress: controller,
               ),
@@ -203,12 +203,12 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                             'up',
                             Text(
                               'My Lists',
-                              style: header,
+                              style: Theme.of(context).textTheme.headline1,
                             ),
                           )
                         : Text(
                             'My Lists',
-                            style: header,
+                            style: Theme.of(context).textTheme.headline1,
                           ),
                     SizedBox(height: 10),
                     animated
@@ -232,25 +232,26 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                               MaterialStateProperty.all(Colors.transparent),
                         ),
                         onPressed: () {},
-                        child: const Text(
+                        child: Text(
                           'New Item',
-                          style: secondaryText,
+                          style: Theme.of(context).textTheme.headline2,
                         )),
                   ),
                   Container(
                     margin: EdgeInsets.only(right: 20),
                     child: TextButton(
-                        style: ButtonStyle(
-                          overlayColor:
-                              MaterialStateProperty.all(Colors.transparent),
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, "/addlist");
-                        },
-                        child: const Text(
-                          'Add List',
-                          style: secondaryText,
-                        )),
+                      style: ButtonStyle(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/addlist");
+                      },
+                      child: Text(
+                        'Add List',
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                    ),
                   )
                 ],
               ),

@@ -1,4 +1,5 @@
 import 'package:L1_sean/model/itemModel.dart';
+import 'package:L1_sean/provider/userProvider.dart';
 import 'package:L1_sean/services/itemService.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:L1_sean/utils/popup.dart';
@@ -70,7 +71,9 @@ class _AddItemState extends State<AddItem> {
               highlightColor: Colors.transparent,
               icon: Icon(
                 Icons.keyboard_backspace_rounded,
-                color: _back ? Colors.grey : Colors.black,
+                color: _back
+                    ? Theme.of(context).scaffoldBackgroundColor
+                    : Theme.of(context).iconTheme.color,
                 size: 30,
               ),
               onPressed: () => {
@@ -95,6 +98,7 @@ class _AddItemState extends State<AddItem> {
                       return null;
                     }
                   }
+
                   if (widget.item != null && widget.listid == null) {
                     // update item
                     String desc = descController.text;
@@ -118,28 +122,34 @@ class _AddItemState extends State<AddItem> {
                     }
                   } else {
                     // add item
-                    String desc = descController.text;
-                    desc = desc.replaceAll("\n", "\\n");
-                    var item = await ItemService().addItem(
-                        nameController.text,
-                        desc,
-                        urlController.text,
-                        isFlagged,
-                        widget.listid.toString());
-                    setState(() => {_check = true});
-                    if (item) {
-                      displayToast(
-                          'Item Added Successfully', context, successColor);
-                      Navigator.of(context).pop();
+                    if (nameController.text.length != 0) {
+                      String desc = descController.text;
+                      desc = desc.replaceAll("\n", "\\n");
+                      var item = await ItemService().addItem(
+                          nameController.text,
+                          desc,
+                          urlController.text,
+                          isFlagged,
+                          widget.listid.toString());
+                      setState(() => {_check = true});
+                      if (item) {
+                        displayToast(
+                            'Item Added Successfully', context, successColor);
+                        Navigator.of(context).pop();
+                      } else {
+                        displayToast('Add Item Failed', context, failColor);
+                      }
                     } else {
-                      displayToast('Add Item Failed', context, failColor);
+                      displayToast('Input a name', context, failColor);
                     }
                   }
                 },
                 child: Container(
                   margin: EdgeInsets.only(right: 10),
-                  child:
-                      Text('Done', style: _check ? thirdText : thirdGreyText),
+                  child: Text('Done',
+                      style: _check
+                          ? thirdGreyText
+                          : Theme.of(context).textTheme.headline3),
                 ),
               )
             ],
@@ -148,7 +158,7 @@ class _AddItemState extends State<AddItem> {
         centerTitle: true,
         title: Text(
           'Details',
-          style: secondaryText,
+          style: Theme.of(context).textTheme.headline2,
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -162,8 +172,20 @@ class _AddItemState extends State<AddItem> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: thirdColor,
-                      borderRadius: BorderRadius.circular(15)),
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? mainBGLightColor
+                        : mainBGDarkColor,
+                    boxShadow: Theme.of(context).brightness == Brightness.light
+                        ? [
+                            MyShadows.primaryLightShadow,
+                            MyShadows.secondaryLightShadow
+                          ]
+                        : [
+                            MyShadows.primaryDarkShadow,
+                            MyShadows.secondaryDarkShadow
+                          ],
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                   padding: EdgeInsets.all(20),
                   child: Column(
                     children: [
@@ -173,13 +195,14 @@ class _AddItemState extends State<AddItem> {
                           decoration: InputDecoration(
                             hintText: 'Name',
                             enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  width: 2, color: backgroundColor),
+                              borderSide: BorderSide(
+                                  width: 2,
+                                  color: Theme.of(context).iconTheme.color),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  width: 2, color: backgroundColor),
+                              borderSide:  BorderSide(
+                                  width: 2, color: Theme.of(context).iconTheme.color),
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
@@ -194,13 +217,13 @@ class _AddItemState extends State<AddItem> {
                             decoration: InputDecoration(
                               hintText: 'Description',
                               enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    width: 2, color: backgroundColor),
+                                borderSide:  BorderSide(
+                                    width: 2, color: Theme.of(context).iconTheme.color),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    width: 2, color: backgroundColor),
+                                borderSide:  BorderSide(
+                                    width: 2, color: Theme.of(context).iconTheme.color),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
@@ -216,13 +239,13 @@ class _AddItemState extends State<AddItem> {
                           decoration: InputDecoration(
                             hintText: 'URL',
                             enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  width: 2, color: backgroundColor),
+                              borderSide:  BorderSide(
+                                  width: 2, color: Theme.of(context).iconTheme.color),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  width: 2, color: backgroundColor),
+                              borderSide:  BorderSide(
+                                  width: 2, color: Theme.of(context).iconTheme.color),
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
@@ -232,10 +255,23 @@ class _AddItemState extends State<AddItem> {
                   ),
                 ),
                 margin20,
+                margin20,
                 Container(
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                   decoration: BoxDecoration(
-                      color: thirdColor,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? mainBGLightColor
+                          : mainBGDarkColor,
+                      boxShadow:
+                          Theme.of(context).brightness == Brightness.light
+                              ? [
+                                  MyShadows.primaryLightShadow,
+                                  MyShadows.secondaryLightShadow
+                                ]
+                              : [
+                                  MyShadows.primaryDarkShadow,
+                                  MyShadows.secondaryDarkShadow
+                                ],
                       borderRadius: BorderRadius.circular(15)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -245,8 +281,9 @@ class _AddItemState extends State<AddItem> {
                           Container(
                             margin: EdgeInsets.only(right: 6),
                             decoration: BoxDecoration(
-                                color: Colors.orangeAccent,
-                                borderRadius: BorderRadius.circular(10)),
+                              color: Colors.orangeAccent,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             padding: EdgeInsets.all(6),
                             child: Icon(
                               Foundation.flag,
@@ -256,7 +293,7 @@ class _AddItemState extends State<AddItem> {
                           ),
                           Text(
                             'Flagged',
-                            style: whiteText,
+                            style: Theme.of(context).textTheme.headline2,
                           ),
                         ],
                       ),
@@ -273,12 +310,25 @@ class _AddItemState extends State<AddItem> {
                   ),
                 ),
                 margin20,
+                margin20,
                 GestureDetector(
                   onTap: () => {Navigator.pushNamed(context, "/priority")},
                   child: Container(
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                     decoration: BoxDecoration(
-                        color: thirdColor,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? mainBGLightColor
+                            : mainBGDarkColor,
+                        boxShadow:
+                            Theme.of(context).brightness == Brightness.light
+                                ? [
+                                    MyShadows.primaryLightShadow,
+                                    MyShadows.secondaryLightShadow
+                                  ]
+                                : [
+                                    MyShadows.primaryDarkShadow,
+                                    MyShadows.secondaryDarkShadow
+                                  ],
                         borderRadius: BorderRadius.circular(15)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -299,14 +349,14 @@ class _AddItemState extends State<AddItem> {
                             ),
                             Text(
                               'Priority',
-                              style: whiteText,
+                              style: Theme.of(context).textTheme.headline2,
                             ),
                           ],
                         ),
                         Icon(
                           MaterialIcons.keyboard_arrow_right,
                           size: 30,
-                          color: Colors.white,
+                          color: Theme.of(context).iconTheme.color,
                         ),
                         // CupertinoSwitch(
                         //   trackColor: Colors.grey,

@@ -67,62 +67,69 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(30.0),
           child: AppBar(
-            leading: ButtonArrow(context, 'home'),
+            leading: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [ButtonArrow(context, 'home')],
+            ),
             elevation: 0,
             flexibleSpace: Container(),
             backgroundColor: Colors.transparent,
             iconTheme: IconThemeData(color: Colors.black),
             actions: [
-              GestureDetector(
-                onTap: () async {
-                  if (myController.text != null &&
-                      selectedColorIndex != null &&
-                      selectedIconIndex != null) {
-                    if (widget.id != null) {
-                      // print("Color: " + selectedColorIndex.toString());
-                      // print("Icon: " + selectedIconIndex.toString());
-                      var editList = await ListService().editList(
-                          widget.id,
-                          myController.text,
-                          selectedColorIndex + 1,
-                          selectedIconIndex + 1);
-                      if (editList) {
-                        displayDialog(
-                            'Success!', context, controller, true, 'addlist');
-                      } else {
-                        displayDialog(
-                            'Failed!', context, controller, false, 'addlist');
-                      }
-                    } else {
-                      var addList = await ListService().addList(
-                          myController.text,
-                          selectedIconIndex + 1,
-                          selectedColorIndex + 1);
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      if (myController.text != null &&
+                          selectedColorIndex != null &&
+                          selectedIconIndex != null) {
+                        if (widget.id != null) {
+                          var editList = await ListService().editList(
+                              widget.id,
+                              myController.text,
+                              selectedColorIndex + 1,
+                              selectedIconIndex + 1);
+                          if (editList) {
+                            displayDialog('Success!', context, controller, true,
+                                'addlist');
+                          } else {
+                            displayDialog('Failed!', context, controller, false,
+                                'addlist');
+                          }
+                        } else {
+                          var addList = await ListService().addList(
+                              myController.text,
+                              selectedIconIndex + 1,
+                              selectedColorIndex + 1);
 
-                      if (addList) {
-                        displayDialog(
-                            'Success!', context, controller, true, 'addlist');
+                          if (addList) {
+                            displayDialog('Success!', context, controller, true,
+                                'addlist');
+                          } else {
+                            displayDialog('Failed!', context, controller, false,
+                                'addlist');
+                          }
+                        }
                       } else {
-                        displayDialog(
-                            'Failed!', context, controller, false, 'addlist');
+                        displayToast("There must be a name,icon and color",
+                            context, failColor);
                       }
-                    }
-                  } else {
-                    displayToast("There must be a name,icon and color", context,
-                        failColor);
-                  }
-                },
-                child: Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    child: Icon(
-                      Icons.check,
-                      size: 30,
-                      color: myController.text != null &&
-                              selectedColorIndex != null &&
-                              selectedIconIndex != null
-                          ? Colors.black
-                          : Colors.grey,
-                    )),
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 10, top: 5),
+                      child: Icon(
+                        Icons.check,
+                        size: 30,
+                        color: myController.text != null &&
+                                selectedColorIndex != null &&
+                                selectedIconIndex != null
+                            ? Theme.of(context).iconTheme.color
+                            : Colors.white,
+                      ),
+                    ),
+                  )
+                ],
               )
             ],
           ),
@@ -141,8 +148,21 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width * 0.5,
                           decoration: BoxDecoration(
-                            color: secondaryColor,
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? mainBGLightColor
+                                    : mainBGDarkColor,
                             borderRadius: BorderRadius.circular(25),
+                            boxShadow:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? [
+                                        MyShadows.primaryLightShadow,
+                                        MyShadows.secondaryLightShadow
+                                      ]
+                                    : [
+                                        MyShadows.primaryDarkShadow,
+                                        MyShadows.secondaryDarkShadow
+                                      ],
                           ),
                           child: Column(
                             children: [
@@ -211,14 +231,28 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         margin20,
+                        margin20,
                         Container(
                           constraints: BoxConstraints(
                             minHeight:
                                 MediaQuery.of(context).size.height * 0.10,
                           ),
                           decoration: BoxDecoration(
-                            color: secondaryColor,
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? mainBGLightColor
+                                    : mainBGDarkColor,
                             borderRadius: BorderRadius.circular(25),
+                            boxShadow:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? [
+                                        MyShadows.primaryLightShadow,
+                                        MyShadows.secondaryLightShadow
+                                      ]
+                                    : [
+                                        MyShadows.primaryDarkShadow,
+                                        MyShadows.secondaryDarkShadow
+                                      ],
                           ),
                           child: FutureBuilder(
                             future: ListService().fetchColors(),
@@ -280,13 +314,27 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         margin20,
+                        margin20,
                         Container(
                             constraints: BoxConstraints(
                               minHeight:
-                                  MediaQuery.of(context).size.height * 0.5,
+                                  MediaQuery.of(context).size.height * 0.3,
                             ),
                             decoration: BoxDecoration(
-                              color: secondaryColor,
+                              boxShadow: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? [
+                                      MyShadows.primaryLightShadow,
+                                      MyShadows.secondaryLightShadow
+                                    ]
+                                  : [
+                                      MyShadows.primaryDarkShadow,
+                                      MyShadows.secondaryDarkShadow
+                                    ],
+                              color: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? mainBGLightColor
+                                  : mainBGDarkColor,
                               borderRadius: BorderRadius.circular(25),
                             ),
                             child: FutureBuilder(

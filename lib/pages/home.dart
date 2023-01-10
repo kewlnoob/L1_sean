@@ -23,8 +23,8 @@ class _HomeState extends State<Home> {
       angle: -15,
       style: DrawerStyle.Style2,
       slideWidth: MediaQuery.of(context).size.width * 0.7,
-      showShadow: true,
-      backgroundColor: secondaryColor,
+      // showShadow: true,
+      // backgroundColor: Colors.grey[900],
       mainScreen: getScreen(),
       menuScreen: Builder(
         builder: (context) => MyDrawer(

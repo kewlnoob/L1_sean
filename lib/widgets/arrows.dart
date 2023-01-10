@@ -10,7 +10,7 @@ Widget ButtonArrow(BuildContext context, String pageName) {
         highlightColor: Colors.transparent,
         icon: Icon(
           Icons.keyboard_backspace_rounded,
-          color: Colors.grey,
+          color: Theme.of(context).iconTheme.color,
           size: 30,
         ),
         onPressed: () {

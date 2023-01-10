@@ -46,7 +46,7 @@ class _MyDrawerState extends State<MyDrawer> {
     return Theme(
       data: ThemeData.dark(),
       child: Scaffold(
-        backgroundColor: thirdColor,
+        backgroundColor: Colors.black26,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -33,27 +33,81 @@ class UserProvider extends ChangeNotifier {
 
 class MyThemes {
   static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.grey.shade900,
+    iconTheme: IconThemeData(
+      color: mainBGLightColor
+    ),
+    scaffoldBackgroundColor: Colors.grey[900],
     colorScheme: ColorScheme.dark(),
     textTheme: TextTheme(
       headline1: TextStyle(
         fontFamily: 'SansPro-Bold',
-        color: Colors.white,
+        color: mainlightTextColor,
         fontSize: 30,
       ),
       headline2: TextStyle(
         fontFamily: 'SansPro-Bold',
-        color: Colors.white,
+        color: mainlightTextColor,
         fontSize: 18,
       ),
       headline3: TextStyle(
         fontFamily: 'SansPro-Bold',
-        color: Colors.white,
+        color: mainlightTextColor,
         fontSize: 15,
       ),
     ),
   );
   static final lightTheme = ThemeData(
-      scaffoldBackgroundColor: backgroundColor,
-      colorScheme: ColorScheme.light());
+    iconTheme: IconThemeData(
+      color: mainBGDarkColor
+    ),
+    scaffoldBackgroundColor: mainBGLightColor,
+    colorScheme: ColorScheme.light(),
+    textTheme: TextTheme(
+      headline1: TextStyle(
+        fontFamily: 'SansPro-Bold',
+        color: mainDarkTextColor,
+        fontSize: 30,
+      ),
+      headline2: TextStyle(
+        fontFamily: 'SansPro-Bold',
+        color: mainDarkTextColor,
+        fontSize: 18,
+      ),
+      headline3: TextStyle(
+        fontFamily: 'SansPro-Bold',
+        color: mainDarkTextColor,
+        fontSize: 15,
+      ),
+    ),
+  );
+}
+
+class MyShadows {
+  static var primaryLightShadow = BoxShadow(
+    color: Colors.grey.shade500,
+    offset: Offset(4, 4),
+    blurRadius: 15,
+    spreadRadius: 1,
+  );
+
+  static var secondaryLightShadow = BoxShadow(
+    color: Colors.white,
+    offset: Offset(-4, -4),
+    blurRadius: 15,
+    spreadRadius: 1,
+  );
+
+    static var primaryDarkShadow = BoxShadow(
+    color: Colors.black,
+    offset: Offset(4, 4),
+    blurRadius: 15,
+    spreadRadius: 1,
+  );
+
+  static var secondaryDarkShadow = BoxShadow(
+    color: Colors.grey[800],
+    offset: Offset(-4, -4),
+    blurRadius: 15,
+    spreadRadius: 1,
+  );
 }

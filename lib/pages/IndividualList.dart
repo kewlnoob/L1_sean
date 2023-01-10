@@ -1,6 +1,7 @@
 import 'package:L1_sean/mapper/itemMapper.dart';
 import 'package:L1_sean/model/itemModel.dart';
 import 'package:L1_sean/pages/additem.dart';
+import 'package:L1_sean/provider/userProvider.dart';
 import 'package:L1_sean/services/itemService.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:L1_sean/utils/popup.dart';
@@ -61,7 +62,7 @@ class _IndividualListState extends State<IndividualList> {
           elevation: 0,
           title: Container(
             height: 30,
-            width:60,
+            width: 60,
             child: TextField(
               focusNode: _searchFocus,
               controller: _searchController,
@@ -110,7 +111,8 @@ class _IndividualListState extends State<IndividualList> {
                           onCanceled: () {},
                           tooltip: "Here's a tip for you.",
                           elevation: 12,
-                          icon: const Icon(Ionicons.ellipsis_vertical_sharp),
+                          icon: Icon(Ionicons.ellipsis_vertical_sharp,
+                              color: Theme.of(context).iconTheme.color),
                           menuItems: [
                             PopupMenuItem(
                               value: 1,
@@ -157,7 +159,7 @@ class _IndividualListState extends State<IndividualList> {
               alignment: Alignment.topLeft,
               child: Text(
                 '${widget.listname}',
-                style: header,
+                style: Theme.of(context).textTheme.headline1,
               ),
             ),
             margin20,
@@ -367,26 +369,61 @@ class _IndividualListState extends State<IndividualList> {
           ],
         ),
       ),
-      floatingActionButton: OpenContainer(
-          onClosed: (data) {
-            //refresh page
-            setState(() {});
-          },
-          transitionDuration: Duration(seconds: 1),
-          closedShape: CircleBorder(),
-          closedColor: primaryColor,
-          openBuilder: (context, _) => AddItem(listid: widget.listid),
-          closedBuilder: (context, action) {
-            return Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: primaryColor,
-              ),
-              height: 50,
-              width: 50,
-              child: Icon(Icons.add, color: Colors.white),
-            );
-          }),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Theme.of(context).brightness == Brightness.light
+              ? mainBGLightColor
+              : mainBGDarkColor,
+          boxShadow: Theme.of(context).brightness == Brightness.light
+              ? [
+                  BoxShadow(
+                    color: Colors.white,
+                    offset: Offset(-4, -4),
+                    blurRadius: 15,
+                    spreadRadius: 0.1,
+                  ),
+                  BoxShadow(
+                    color: Colors.black,
+                    offset: Offset(4, 4),
+                    blurRadius: 15,
+                    spreadRadius: 0.1,
+                  )
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.grey[800],
+                    offset: Offset(-4, -4),
+                    blurRadius: 15,
+                    spreadRadius: 0.1,
+                  ),
+                  BoxShadow(
+                    color: Colors.black,
+                    offset: Offset(4, 4),
+                    blurRadius: 15,
+                    spreadRadius: 0.1,
+                  ),
+                ],
+        ),
+        child: OpenContainer(
+            onClosed: (data) {
+              //refresh page
+              setState(() {});
+            },
+            transitionDuration: Duration(seconds: 1),
+            closedShape: CircleBorder(),
+            closedColor: Theme.of(context).brightness == Brightness.light
+                ? mainBGLightColor
+                : mainBGDarkColor,
+            openBuilder: (context, _) => AddItem(listid: widget.listid),
+            closedBuilder: (context, action) {
+              return Container(
+                height: 50,
+                width: 50,
+                child: Icon(Icons.add, color: Colors.white),
+              );
+            }),
+      ),
     );
   }
 }
