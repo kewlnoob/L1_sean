@@ -67,7 +67,7 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(30.0),
           child: AppBar(
-            leading: ButtonArrow(context,'home'),
+            leading: ButtonArrow(context, 'home'),
             elevation: 0,
             flexibleSpace: Container(),
             backgroundColor: Colors.transparent,
@@ -87,9 +87,11 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                           selectedColorIndex + 1,
                           selectedIconIndex + 1);
                       if (editList) {
-                        displayDialog('Success!', context, controller, true,'addlist');
+                        displayDialog(
+                            'Success!', context, controller, true, 'addlist');
                       } else {
-                        displayDialog('Failed!', context, controller, false,'addlist');
+                        displayDialog(
+                            'Failed!', context, controller, false, 'addlist');
                       }
                     } else {
                       var addList = await ListService().addList(
@@ -98,9 +100,11 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                           selectedColorIndex + 1);
 
                       if (addList) {
-                        displayDialog('Success!', context, controller, true, 'addlist');
+                        displayDialog(
+                            'Success!', context, controller, true, 'addlist');
                       } else {
-                        displayDialog('Failed!', context, controller, false,'addlist');
+                        displayDialog(
+                            'Failed!', context, controller, false, 'addlist');
                       }
                     }
                   } else {
@@ -124,219 +128,229 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
           ),
         ),
         body: SafeArea(
-          child: Padding(
-              padding: EdgeInsets.all(20),
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width * 0.5,
-                        decoration: BoxDecoration(
-                          color: secondaryColor,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Column(
-                          children: [
-                            margin20,
-                            Container(
-                              width: 85,
-                              height: 85,
-                              decoration: BoxDecoration(
-                                  color: selectedColorIndex != null
-                                      ? Color(int.parse(
-                                          colorlist[selectedColorIndex].color))
-                                      : Colors.blue,
-                                  shape: BoxShape.circle),
-                              child: Icon(
-                                selectedIconIndex != null
-                                    ? IconData(
-                                        int.parse(
-                                            iconlist[selectedIconIndex].icon),
-                                        fontFamily: 'MaterialIcons')
-                                    : Icons.menu,
-                                color: Colors.white,
-                                size: 60,
+          child: SingleChildScrollView(
+            child: Padding(
+                padding: EdgeInsets.all(20),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width * 0.5,
+                          decoration: BoxDecoration(
+                            color: secondaryColor,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Column(
+                            children: [
+                              margin20,
+                              Container(
+                                width: 85,
+                                height: 85,
+                                decoration: BoxDecoration(
+                                    color: selectedColorIndex != null
+                                        ? Color(int.parse(
+                                            colorlist[selectedColorIndex]
+                                                .color))
+                                        : Colors.blue,
+                                    shape: BoxShape.circle),
+                                child: Icon(
+                                  selectedIconIndex != null
+                                      ? IconData(
+                                          int.parse(
+                                              iconlist[selectedIconIndex].icon),
+                                          fontFamily: 'MaterialIcons')
+                                      : Icons.menu,
+                                  color: Colors.white,
+                                  size: 60,
+                                ),
                               ),
-                            ),
-                            margin20,
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: TextField(
-                                textAlign: TextAlign.center,
-                                controller: myController,
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: Colors.white, width: 2),
+                              margin20,
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.08,
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  controller: myController,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(
+                                          color: Colors.white, width: 2),
+                                    ),
+                                    hintStyle: TextStyle(
+                                        fontSize: 20.0,
+                                        color: selectedColorIndex != null
+                                            ? Color(int.parse(
+                                                colorlist[selectedColorIndex]
+                                                    .color))
+                                            : Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                    hintText: "List Name",
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.white, width: 2),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                   ),
-                                  hintStyle: TextStyle(
-                                      fontSize: 20.0,
+                                  style: TextStyle(
                                       color: selectedColorIndex != null
                                           ? Color(int.parse(
                                               colorlist[selectedColorIndex]
                                                   .color))
                                           : Colors.white,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.bold),
-                                  hintText: "List Name",
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.white, width: 2),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
                                 ),
-                                style: TextStyle(
-                                    color: selectedColorIndex != null
-                                        ? Color(int.parse(
-                                            colorlist[selectedColorIndex]
-                                                .color))
-                                        : Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      margin20,
-                      Container(
-                        constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.height * 0.10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: secondaryColor,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: FutureBuilder(
-                          future: ListService().fetchColors(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return GridView.builder(
-                                physics: BouncingScrollPhysics(),
-                                scrollDirection: Axis.vertical,
-                                itemCount: snapshot.data.length,
-                                shrinkWrap: true,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 5,
-                                        childAspectRatio: 1.1),
-                                itemBuilder: (BuildContext context, int index) {
-                                  ColorModel colorModel = snapshot.data[index];
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 40,
-                                        width: 40,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: index == selectedColorIndex
-                                                  ? Colors.white
-                                                  : Color(int.parse(
-                                                      colorModel.color)),
-                                              width: 2.0),
-                                          color: Color(
-                                              int.parse(colorModel.color)),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Material(
-                                          color: Color(
-                                              int.parse(colorModel.color)),
-                                          shape: const CircleBorder(),
-                                          child: InkWell(
-                                            splashColor: Colors.transparent,
-                                            onTap: () {
-                                              setState(() {
-                                                selectedColorIndex = index;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                            return CircularProgressIndicator();
-                          },
-                        ),
-                      ),
-                      margin20,
-                      Container(
+                        margin20,
+                        Container(
                           constraints: BoxConstraints(
-                            minHeight: MediaQuery.of(context).size.height * 0.5,
+                            minHeight:
+                                MediaQuery.of(context).size.height * 0.10,
                           ),
                           decoration: BoxDecoration(
                             color: secondaryColor,
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: FutureBuilder(
-                              future: ListService().fetchIcons(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return GridView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: snapshot.data.length,
-                                    shrinkWrap: true,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 5,
-                                            childAspectRatio: 1.1),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      IconModel iconModel =
-                                          snapshot.data[index];
-                                      return Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            height: 40,
-                                            width: 40,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey,
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  color:
-                                                      index == selectedIconIndex
-                                                          ? Colors.white
-                                                          : Colors.transparent,
-                                                  width: 2.0),
-                                            ),
+                            future: ListService().fetchColors(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return GridView.builder(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: snapshot.data.length,
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 5,
+                                          childAspectRatio: 1.1),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    ColorModel colorModel =
+                                        snapshot.data[index];
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color:
+                                                    index == selectedColorIndex
+                                                        ? Colors.white
+                                                        : Color(int.parse(
+                                                            colorModel.color)),
+                                                width: 2.0),
+                                            color: Color(
+                                                int.parse(colorModel.color)),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Material(
+                                            color: Color(
+                                                int.parse(colorModel.color)),
+                                            shape: const CircleBorder(),
                                             child: InkWell(
                                               splashColor: Colors.transparent,
                                               onTap: () {
                                                 setState(() {
-                                                  selectedIconIndex = index;
+                                                  selectedColorIndex = index;
                                                 });
                                               },
-                                              child: Icon(
-                                                IconData(
-                                                    int.parse(iconModel.icon),
-                                                    fontFamily:
-                                                        'MaterialIcons'),
-                                                color: Colors.white,
-                                              ),
                                             ),
                                           ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                                return CircularProgressIndicator();
-                              })),
-                    ],
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          ),
+                        ),
+                        margin20,
+                        Container(
+                            constraints: BoxConstraints(
+                              minHeight:
+                                  MediaQuery.of(context).size.height * 0.5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: secondaryColor,
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: FutureBuilder(
+                                future: ListService().fetchIcons(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return GridView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: snapshot.data.length,
+                                      shrinkWrap: true,
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 5,
+                                              childAspectRatio: 1.1),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        IconModel iconModel =
+                                            snapshot.data[index];
+                                        return Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              height: 40,
+                                              width: 40,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: index ==
+                                                            selectedIconIndex
+                                                        ? Colors.white
+                                                        : Colors.transparent,
+                                                    width: 2.0),
+                                              ),
+                                              child: InkWell(
+                                                splashColor: Colors.transparent,
+                                                onTap: () {
+                                                  setState(() {
+                                                    selectedIconIndex = index;
+                                                  });
+                                                },
+                                                child: Icon(
+                                                  IconData(
+                                                      int.parse(iconModel.icon),
+                                                      fontFamily:
+                                                          'MaterialIcons'),
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                  return CircularProgressIndicator();
+                                })),
+                      ],
+                    ),
                   ),
-                ),
-              )),
+                )),
+          ),
         ));
   }
 }

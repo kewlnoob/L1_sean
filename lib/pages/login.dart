@@ -26,40 +26,42 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Align(
-          alignment: Alignment.topCenter,
-          child: Column(
-            children: [
-              ButtonArrow(context,'welcome'),
-              Container(
-                child: Text('Login', style: header),
-              ),
-              Lottie.asset('assets/images/login.json',
-                  height: 300, animate: true),
-              emailInputElement(),
-              margin20,
-              passwordInputElement(),
-              margin20,
-              Container(
-                width: 250,
-                height: 50,
-                decoration: buttonDecoration,
-                child: FlatButton(
-                  child: Text('Login'),
-                  textColor: Colors.white,
-                  onPressed: () async {
-                    var login = await AuthService()
-                        .login(email.text, password.text, context);
-                    if(login) {
-                      Navigator.pushNamed(context, '/home');
-                    }
-                  },
+      child: SingleChildScrollView(
+        child: Align(
+            alignment: Alignment.topCenter,
+            child: Column(
+              children: [
+                ButtonArrow(context, 'welcome'),
+                Container(
+                  child: Text('Login', style: header),
                 ),
-              ),
-              margin20,
-              accountUrl(),
-            ],
-          )),
+                Lottie.asset('assets/images/login.json',
+                    height: 300, animate: true),
+                emailInputElement(),
+                margin20,
+                passwordInputElement(),
+                margin20,
+                Container(
+                  width: 250,
+                  height: 50,
+                  decoration: buttonDecoration,
+                  child: FlatButton(
+                    child: Text('Login'),
+                    textColor: Colors.white,
+                    onPressed: () async {
+                      var login = await AuthService()
+                          .login(email.text, password.text, context);
+                      if (login) {
+                        Navigator.pushNamed(context, '/home');
+                      }
+                    },
+                  ),
+                ),
+                margin20,
+                accountUrl(),
+              ],
+            )),
+      ),
     ));
   }
 

@@ -34,8 +34,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ItemProvider>(
             create: (context) => ItemProvider())
       ],
-      
-      builder: (context,_){
+      builder: (context, _) {
         return App();
       },
     );
@@ -45,7 +44,7 @@ class MyApp extends StatelessWidget {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<UserProvider>(context, listen: false);
+    final provider = Provider.of<UserProvider>(context, listen: true);
     return MaterialApp(
       themeMode: provider.themeMode,
       theme: MyThemes.lightTheme,

@@ -6,7 +6,7 @@ import 'package:day_night_switcher/day_night_switcher.dart';
 class ChangeThemeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<UserProvider>(context,listen: false);
+    final provider = Provider.of<UserProvider>(context);
     return DayNightSwitcher(
       isDarkModeEnabled: provider.isDarkMode,
       onStateChanged: (isDarkModeEnabled) {

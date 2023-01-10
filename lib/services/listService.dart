@@ -89,6 +89,36 @@ class ListService {
     return "0";
   }
 
+  Future<String> fetchCompleteCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+
+    if (value != null) {
+      var url = "$ipAddress/fetchCompleteCount.php?userid=" +
+          jsonDecode(value)['userid'];
+      final response = await http.get(url);
+      if (jsonDecode(response.body)['count'] != null) {
+        return jsonDecode(response.body)['count'];
+      }
+    }
+    return "0";
+  }
+
+  Future<String> fetchFlagCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+
+    if (value != null) {
+      var url =
+          "$ipAddress/fetchFlagCount.php?userid=" + jsonDecode(value)['userid'];
+      final response = await http.get(url);
+      if (jsonDecode(response.body)['count'] != null) {
+        return jsonDecode(response.body)['count'];
+      }
+    }
+    return "0";
+  }
+
   Future<String> fetchArchiveCount() async {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString('user');
@@ -126,7 +156,8 @@ class ListService {
     final value = prefs.getString('user');
 
     if (value != null) {
-      var url = "$ipAddress/fetchArchive.php?userid=" + jsonDecode(value)['userid'];
+      var url =
+          "$ipAddress/fetchArchive.php?userid=" + jsonDecode(value)['userid'];
       final response = await http.get(url);
       if (jsonDecode(response.body) != null) {
         return listItemModelFromJson(response.body);

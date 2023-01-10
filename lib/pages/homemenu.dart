@@ -10,7 +10,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:day_night_switcher/day_night_switcher.dart';
 
 class HomeMenu extends StatefulWidget {
   @override
@@ -25,6 +24,8 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
   bool animated = true;
   String allCount;
   String archiveCount;
+  String completeCount;
+  String flagCount;
   @override
   void initState() {
     // TODO: implement initState
@@ -53,9 +54,13 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
   void fetchCounts() async {
     var all = await ListService().fetchAllCount();
     var archive = await ListService().fetchArchiveCount();
+    var complete = await ListService().fetchCompleteCount();
+    var flag = await ListService().fetchFlagCount();
     setState(() {
       allCount = all;
       archiveCount = archive;
+      completeCount = complete;
+      flagCount = flag;
     });
   }
 
@@ -98,7 +103,13 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
         }),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: [Container(height:100,width:70,margin:EdgeInsets.only(right:30),child: ChangeThemeButton())],
+        actions: [
+          Container(
+              height: 100,
+              width: 70,
+              margin: EdgeInsets.only(right: 30),
+              child: ChangeThemeButton())
+        ],
       ),
       body: SafeArea(
         child: Container(
@@ -154,19 +165,35 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                             ? FadeAnimation(
                                 1.5,
                                 'up',
-                                displays(FontAwesome.check, 'Completed',
-                                    Colors.green[400], '3', context))
-                            : displays(FontAwesome.check, 'Completed',
-                                Colors.green[400], '3', context),
+                                displays(
+                                    FontAwesome.check,
+                                    'Completed',
+                                    Colors.green[400],
+                                    completeCount != null ? completeCount : "0",
+                                    context))
+                            : displays(
+                                FontAwesome.check,
+                                'Completed',
+                                Colors.green[400],
+                                completeCount != null ? completeCount : "0",
+                                context),
                         margin20,
                         animated
                             ? FadeAnimation(
                                 1.5,
                                 'up',
-                                displays(Foundation.flag, 'Flagged',
-                                    Colors.orange[300], '3', context))
-                            : displays(Foundation.flag, 'Flagged',
-                                Colors.orange[300], '3', context)
+                                displays(
+                                    Foundation.flag,
+                                    'Flagged',
+                                    Colors.orange[300],
+                                    flagCount != null ? flagCount : "0",
+                                    context))
+                            : displays(
+                                Foundation.flag,
+                                'Flagged',
+                                Colors.orange[300],
+                                flagCount != null ? flagCount : "0",
+                                context)
                       ],
                     ),
                     margin20,

@@ -155,42 +155,23 @@ class _AddItemState extends State<AddItem> {
         iconTheme: IconThemeData(color: Colors.black),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: thirdColor, borderRadius: BorderRadius.circular(15)),
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Container(
-                      child: TextField(
-                        controller: nameController,
-                        decoration: InputDecoration(
-                          hintText: 'Name',
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 2, color: backgroundColor),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 2, color: backgroundColor),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                    ),
-                    margin20,
-                    Container(
-                      child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: thirdColor,
+                      borderRadius: BorderRadius.circular(15)),
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      Container(
                         child: TextField(
-                          minLines: 5,
-                          maxLines: 5,
+                          controller: nameController,
                           decoration: InputDecoration(
-                            hintText: 'Description',
+                            hintText: 'Name',
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   width: 2, color: backgroundColor),
@@ -202,77 +183,56 @@ class _AddItemState extends State<AddItem> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          controller: descController,
-                          keyboardType: TextInputType.multiline,
                         ),
                       ),
-                    ),
-                    margin20,
-                    Container(
-                      child: TextField(
-                        controller: urlController,
-                        decoration: InputDecoration(
-                          hintText: 'URL',
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 2, color: backgroundColor),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 2, color: backgroundColor),
-                            borderRadius: BorderRadius.circular(12),
+                      margin20,
+                      Container(
+                        child: SingleChildScrollView(
+                          child: TextField(
+                            minLines: 5,
+                            maxLines: 5,
+                            decoration: InputDecoration(
+                              hintText: 'Description',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    width: 2, color: backgroundColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    width: 2, color: backgroundColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            controller: descController,
+                            keyboardType: TextInputType.multiline,
                           ),
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ),
-              margin20,
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                decoration: BoxDecoration(
-                    color: thirdColor, borderRadius: BorderRadius.circular(15)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 6),
-                          decoration: BoxDecoration(
-                              color: Colors.orangeAccent,
-                              borderRadius: BorderRadius.circular(10)),
-                          padding: EdgeInsets.all(6),
-                          child: Icon(
-                            Foundation.flag,
-                            size: 20,
-                            color: Colors.white,
+                      margin20,
+                      Container(
+                        child: TextField(
+                          controller: urlController,
+                          decoration: InputDecoration(
+                            hintText: 'URL',
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 2, color: backgroundColor),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 2, color: backgroundColor),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
-                        Text(
-                          'Flagged',
-                          style: whiteText,
-                        ),
-                      ],
-                    ),
-                    CupertinoSwitch(
-                      trackColor: Colors.grey,
-                      activeColor: Colors.greenAccent,
-                      value: isFlagged,
-                      onChanged: (value) => {
-                        print(value),
-                        setState(() => {isFlagged = value})
-                      },
-                    ),
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              margin20,
-              GestureDetector(
-                onTap: () => {Navigator.pushNamed(context, "/priority")},
-                child: Container(
+                margin20,
+                Container(
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                   decoration: BoxDecoration(
                       color: thirdColor,
@@ -289,37 +249,81 @@ class _AddItemState extends State<AddItem> {
                                 borderRadius: BorderRadius.circular(10)),
                             padding: EdgeInsets.all(6),
                             child: Icon(
-                              FontAwesome.exclamation,
+                              Foundation.flag,
                               size: 20,
                               color: Colors.white,
                             ),
                           ),
                           Text(
-                            'Priority',
+                            'Flagged',
                             style: whiteText,
                           ),
                         ],
                       ),
-                      Icon(
-                        MaterialIcons.keyboard_arrow_right,
-                        size: 30,
-                        color: Colors.white,
+                      CupertinoSwitch(
+                        trackColor: Colors.grey,
+                        activeColor: Colors.greenAccent,
+                        value: isFlagged,
+                        onChanged: (value) => {
+                          print(value),
+                          setState(() => {isFlagged = value})
+                        },
                       ),
-                      // CupertinoSwitch(
-                      //   trackColor: Colors.grey,
-                      //   activeColor: Colors.greenAccent,
-                      //   value: isFlagged,
-                      //   onChanged: (value) => {
-                      //     print(value),
-                      //     setState(() => {isFlagged = value})
-                      //   },
-                      // ),
                     ],
                   ),
                 ),
-              ),
-              margin20,
-            ],
+                margin20,
+                GestureDetector(
+                  onTap: () => {Navigator.pushNamed(context, "/priority")},
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    decoration: BoxDecoration(
+                        color: thirdColor,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 6),
+                              decoration: BoxDecoration(
+                                  color: Colors.orangeAccent,
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: EdgeInsets.all(6),
+                              child: Icon(
+                                FontAwesome.exclamation,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Priority',
+                              style: whiteText,
+                            ),
+                          ],
+                        ),
+                        Icon(
+                          MaterialIcons.keyboard_arrow_right,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                        // CupertinoSwitch(
+                        //   trackColor: Colors.grey,
+                        //   activeColor: Colors.greenAccent,
+                        //   value: isFlagged,
+                        //   onChanged: (value) => {
+                        //     print(value),
+                        //     setState(() => {isFlagged = value})
+                        //   },
+                        // ),
+                      ],
+                    ),
+                  ),
+                ),
+                margin20,
+              ],
+            ),
           ),
         ),
       ),

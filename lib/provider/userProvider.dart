@@ -33,9 +33,26 @@ class UserProvider extends ChangeNotifier {
 
 class MyThemes {
   static final darkTheme = ThemeData(
-      scaffoldBackgroundColor: Colors.grey.shade900,
-      colorScheme: ColorScheme.dark(),
-      textTheme: TextTheme(headline1: TextStyle(fontFamily: 'SansPro-Bold')));
+    scaffoldBackgroundColor: Colors.grey.shade900,
+    colorScheme: ColorScheme.dark(),
+    textTheme: TextTheme(
+      headline1: TextStyle(
+        fontFamily: 'SansPro-Bold',
+        color: Colors.white,
+        fontSize: 30,
+      ),
+      headline2: TextStyle(
+        fontFamily: 'SansPro-Bold',
+        color: Colors.white,
+        fontSize: 18,
+      ),
+      headline3: TextStyle(
+        fontFamily: 'SansPro-Bold',
+        color: Colors.white,
+        fontSize: 15,
+      ),
+    ),
+  );
   static final lightTheme = ThemeData(
       scaffoldBackgroundColor: backgroundColor,
       colorScheme: ColorScheme.light());

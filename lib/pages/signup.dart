@@ -24,45 +24,46 @@ class _SignupState extends State<Signup> {
     password.clear();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
             child: Align(
       alignment: Alignment.topCenter,
-      child: Column(
-        children: [
-          ButtonArrow(context,'welcome'),
-          margin20,
-          Container(
-            child: Text('Sign Up', style: header),
-          ),
-          Lottie.asset('assets/images/register.json',
-              height: 250, animate: true),
-          inputElement('Email', email),
-          margin20,
-          inputElement('Username', username),
-          margin20,
-          passwordInputElement('Password', password),
-          margin20,
-          Container(
-            width: 250,
-            height: 50,
-            decoration: buttonDecoration,
-            child: FlatButton(
-              child: Text('Sign Up'),
-              textColor: Colors.white,
-              onPressed: () async {
-                var register = await AuthService().register(
-                    username.text, email.text, password.text, context);
-                if (register) {
-                  Navigator.pushNamed(context, "/login");
-                }
-              },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            ButtonArrow(context, 'welcome'),
+            margin20,
+            Container(
+              child: Text('Sign Up', style: header),
             ),
-          ),
-        ],
+            Lottie.asset('assets/images/register.json',
+                height: 250, animate: true),
+            inputElement('Email', email),
+            margin20,
+            inputElement('Username', username),
+            margin20,
+            passwordInputElement('Password', password),
+            margin20,
+            Container(
+              width: 250,
+              height: 50,
+              decoration: buttonDecoration,
+              child: FlatButton(
+                child: Text('Sign Up'),
+                textColor: Colors.white,
+                onPressed: () async {
+                  var register = await AuthService().register(
+                      username.text, email.text, password.text, context);
+                  if (register) {
+                    Navigator.pushNamed(context, "/login");
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     )));
   }
