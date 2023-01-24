@@ -1,4 +1,5 @@
 import 'package:L1_sean/model/itemModel.dart';
+import 'package:L1_sean/model/priorityModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,14 +7,15 @@ import 'package:L1_sean/utils/global.dart';
 
 class ItemService {
   Future<bool> addItem(String name, String description, String inputUrl,
-      bool flagged, String listid) async {
+      bool flagged, String listid,String priorityid) async {
     var url = "$ipAddress/addItem.php";
     var data = {
       "name": name,
       "description": description,
       "url": inputUrl,
       "flagged": flagged ? "1" : "0",
-      "listid": listid
+      "listid": listid,
+      "priorityid": priorityid != null ? priorityid : "1"
     };
     var response = await http.post(url, body: data);
     if (jsonDecode(response.body) == "success") {
@@ -23,7 +25,7 @@ class ItemService {
   }
 
   Future<bool> updateItem(String name, String description, String inputUrl,
-      bool flagged, String id) async {
+      bool flagged, String id, String priorityid) async {
     print(flagged);
     var url = "$ipAddress/updateItem.php";
     var data = {
@@ -31,7 +33,8 @@ class ItemService {
       "description": description,
       "url": inputUrl,
       "flagged": flagged ? "1" : "0",
-      'id': id
+      'id': id,
+      'priorityid': priorityid != null ? priorityid : "1"
     };
     var response = await http.post(url, body: data);
     if (jsonDecode(response.body) == "success") {
@@ -198,5 +201,11 @@ class ItemService {
       }
     }
     return false;
+  }
+
+  Future<List<PriorityModel>> fetchPriority() async {
+    var url = "$ipAddress/getPriority.php";
+    final response = await http.get(url);
+    return priorityModelFromJson(response.body);
   }
 }

@@ -89,6 +89,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     var provider = Provider.of<UserProvider>(context);
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         leading: Builder(builder: (context) {
           return IconButton(
@@ -115,14 +116,14 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          child: Stack(children: [
+          child: Column(children: [
             Padding(
               padding: const EdgeInsets.only(
                 left: 40,
                 right: 40,
               ),
               child: Container(
-                width: double.infinity,
+                // width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -218,42 +219,43 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            Positioned(
-              bottom: 0,
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 20),
-                    child: TextButton(
+            Expanded(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 20),
+                      child: TextButton(
+                          style: ButtonStyle(
+                            overlayColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                          ),
+                          onPressed: () {},
+                          child: Text(
+                            'New Item',
+                            style: Theme.of(context).textTheme.headline2,
+                          )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(right: 20),
+                      child: TextButton(
                         style: ButtonStyle(
                           overlayColor:
                               MaterialStateProperty.all(Colors.transparent),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/addlist");
+                        },
                         child: Text(
-                          'New Item',
+                          'Add List',
                           style: Theme.of(context).textTheme.headline2,
-                        )),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(right: 20),
-                    child: TextButton(
-                      style: ButtonStyle(
-                        overlayColor:
-                            MaterialStateProperty.all(Colors.transparent),
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, "/addlist");
-                      },
-                      child: Text(
-                        'Add List',
-                        style: Theme.of(context).textTheme.headline2,
-                      ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             )
           ]),

@@ -85,10 +85,11 @@ class App extends StatelessWidget {
                 return PageTransition(
                     duration: Duration(milliseconds: 300),
                     child: AddItem(
-                      item: args['item'],
-                      listname: args['listname'],
-                      isflagged: args['isflagged'],
-                    ),
+                        item: args['item'],
+                        listname: args['listname'],
+                        isflagged: args['isflagged'],
+                        priorityid: args['priorityid'],
+                        pname: args['pname']),
                     type: PageTransitionType.bottomToTop);
               }
             }
@@ -106,10 +107,19 @@ class App extends StatelessWidget {
                 type: PageTransitionType.rightToLeft);
             break;
           case '/priority':
-            return PageTransition(
-                duration: Duration(milliseconds: 300),
-                child: Priority(),
-                type: PageTransitionType.rightToLeft);
+            if (settings.arguments != null) {
+              Map<String, dynamic> args = settings.arguments;
+              return PageTransition(
+                  duration: Duration(milliseconds: 300),
+                  child: Priority(
+                    priorityid: args["priorityid"],
+                    pname: args["pname"],
+                    different: args["different"],
+                    callback: args["callback"],
+                  ),
+                  type: PageTransitionType.rightToLeft);
+            }
+
             break;
         }
       },

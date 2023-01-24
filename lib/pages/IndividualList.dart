@@ -349,6 +349,8 @@ class _IndividualListState extends State<IndividualList> {
                                               "item": item,
                                               "listname": widget.listname,
                                               "isflagged": item.isflagged,
+                                              "priorityid": item.priorityid,
+                                              "pname": item.pname
                                             });
                                       },
                                       child: Container(

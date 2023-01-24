@@ -1,4 +1,5 @@
 import 'package:L1_sean/model/itemModel.dart';
+import 'package:L1_sean/provider/itemProvider.dart';
 import 'package:L1_sean/provider/userProvider.dart';
 import 'package:L1_sean/services/itemService.dart';
 import 'package:L1_sean/utils/global.dart';
@@ -8,13 +9,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:provider/provider.dart';
 
 class AddItem extends StatefulWidget {
   final int listid;
   final ItemModel item;
   final String listname;
   final bool isflagged;
-  const AddItem({this.listid, this.item, this.listname, this.isflagged});
+  final String priorityid;
+  final String pname;
+  const AddItem(
+      {this.listid,
+      this.item,
+      this.listname,
+      this.isflagged,
+      this.priorityid,
+      this.pname});
 
   @override
   State<AddItem> createState() => _AddItemState();
@@ -24,20 +34,29 @@ class _AddItemState extends State<AddItem> {
   bool _back = false;
   bool _check = false;
   bool isFlagged = false;
+  var status;
   var nameController = TextEditingController();
   var descController = TextEditingController();
   var urlController = TextEditingController();
+  String selectedIndex;
   @override
   void initState() {
     // edit item
     if (widget.item != null &&
         widget.listid == null &&
         widget.listname != null &&
-        widget.isflagged != null) {
+        widget.isflagged != null &&
+        widget.pname != null &&
+        widget.priorityid != null) {
       nameController.text = widget.item.name;
       descController.text = widget.item.description;
       urlController.text = widget.item.url;
       isFlagged = widget.isflagged;
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        var provider = Provider.of<ItemProvider>(context, listen: false);
+        print(widget.priorityid);
+        provider.setPriority(widget.pname, widget.priorityid);
+      });
     }
     // TODO: implement initState
     super.initState();
@@ -52,12 +71,13 @@ class _AddItemState extends State<AddItem> {
     urlController.dispose();
   }
 
-  void callbackFunction(int data) {
-    // Do something with the data passed from the child
-    print(data);
+  void callback(data, index) {
+    setState(() {
+      status = data;
+      selectedIndex = index;
+    });
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,14 +121,14 @@ class _AddItemState extends State<AddItem> {
 
                   if (widget.item != null && widget.listid == null) {
                     // update item
-                    String desc = descController.text;
-                    desc = desc.replaceAll("\n", "\\n");
+                    String desc = descController.text.replaceAll("\n", "\\n");
                     var item = await ItemService().updateItem(
                         nameController.text,
                         desc,
                         urlController.text,
                         isFlagged,
-                        widget.item.id.toString());
+                        widget.item.id.toString(),
+                        selectedIndex);
                     setState(() => {_check = true});
                     if (item) {
                       displayToast(
@@ -123,14 +143,14 @@ class _AddItemState extends State<AddItem> {
                   } else {
                     // add item
                     if (nameController.text.length != 0) {
-                      String desc = descController.text;
-                      desc = desc.replaceAll("\n", "\\n");
+                      String desc = descController.text.replaceAll("\n", "\\n");
                       var item = await ItemService().addItem(
                           nameController.text,
                           desc,
                           urlController.text,
                           isFlagged,
-                          widget.listid.toString());
+                          widget.listid.toString(),
+                          selectedIndex);
                       setState(() => {_check = true});
                       if (item) {
                         displayToast(
@@ -201,8 +221,9 @@ class _AddItemState extends State<AddItem> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide:  BorderSide(
-                                  width: 2, color: Theme.of(context).iconTheme.color),
+                              borderSide: BorderSide(
+                                  width: 2,
+                                  color: Theme.of(context).iconTheme.color),
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
@@ -217,13 +238,15 @@ class _AddItemState extends State<AddItem> {
                             decoration: InputDecoration(
                               hintText: 'Description',
                               enabledBorder: OutlineInputBorder(
-                                borderSide:  BorderSide(
-                                    width: 2, color: Theme.of(context).iconTheme.color),
+                                borderSide: BorderSide(
+                                    width: 2,
+                                    color: Theme.of(context).iconTheme.color),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide:  BorderSide(
-                                    width: 2, color: Theme.of(context).iconTheme.color),
+                                borderSide: BorderSide(
+                                    width: 2,
+                                    color: Theme.of(context).iconTheme.color),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
@@ -239,13 +262,15 @@ class _AddItemState extends State<AddItem> {
                           decoration: InputDecoration(
                             hintText: 'URL',
                             enabledBorder: OutlineInputBorder(
-                              borderSide:  BorderSide(
-                                  width: 2, color: Theme.of(context).iconTheme.color),
+                              borderSide: BorderSide(
+                                  width: 2,
+                                  color: Theme.of(context).iconTheme.color),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide:  BorderSide(
-                                  width: 2, color: Theme.of(context).iconTheme.color),
+                              borderSide: BorderSide(
+                                  width: 2,
+                                  color: Theme.of(context).iconTheme.color),
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
@@ -312,7 +337,16 @@ class _AddItemState extends State<AddItem> {
                 margin20,
                 margin20,
                 GestureDetector(
-                  onTap: () => {Navigator.pushNamed(context, "/priority")},
+                  onTap: () => {
+                    Navigator.pushNamed(context, "/priority", arguments: {
+                      "different": widget.priorityid == null ? "add" : "edit",
+                      "priorityid": widget.priorityid != null
+                          ? (int.parse(widget.priorityid) - 1).toString()
+                          : "-1",
+                      "pname": widget.pname != null ? widget.pname : "None",
+                      "callback": callback,
+                    }),
+                  },
                   child: Container(
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                     decoration: BoxDecoration(
@@ -353,20 +387,20 @@ class _AddItemState extends State<AddItem> {
                             ),
                           ],
                         ),
-                        Icon(
-                          MaterialIcons.keyboard_arrow_right,
-                          size: 30,
-                          color: Theme.of(context).iconTheme.color,
+                        Row(
+                          children: [
+                            status != null
+                                ? Text(status)
+                                : widget.pname != null
+                                    ? Text(widget.pname)
+                                    : Text("None"),
+                            Icon(
+                              MaterialIcons.keyboard_arrow_right,
+                              size: 30,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ],
                         ),
-                        // CupertinoSwitch(
-                        //   trackColor: Colors.grey,
-                        //   activeColor: Colors.greenAccent,
-                        //   value: isFlagged,
-                        //   onChanged: (value) => {
-                        //     print(value),
-                        //     setState(() => {isFlagged = value})
-                        //   },
-                        // ),
                       ],
                     ),
                   ),

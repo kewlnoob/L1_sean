@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 const imagelink = '${ipAddress}/images/';
-const ipAddress = "http://192.168.50.200/flutterphp";
+const ipAddress = "http://192.168.1.81/flutterphp";
 // const backgroundColor = Color(0xFFFAFAFA);
 const backgroundColor = Color(0xFFFFE1E8);
 
@@ -12,13 +12,6 @@ Color mainlightTextColor = Colors.grey[300];
 
 Color mainBGDarkColor = Colors.grey[900];
 Color mainDarkTextColor = Colors.grey[900];
-
-
-
-
-
-
-
 
 // const primaryColor = Color(0xFF8
 // 200FF);
