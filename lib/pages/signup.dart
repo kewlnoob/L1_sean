@@ -36,7 +36,7 @@ class _SignupState extends State<Signup> {
             ButtonArrow(context, 'welcome'),
             margin20,
             Container(
-              child: Text('Sign Up', style: header),
+              child: Text('Sign Up', style: Theme.of(context).textTheme.headline1),
             ),
             Lottie.asset('assets/images/register.json',
                 height: 250, animate: true),

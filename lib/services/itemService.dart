@@ -7,13 +7,13 @@ import 'package:L1_sean/utils/global.dart';
 
 class ItemService {
   Future<bool> addItem(String name, String description, String inputUrl,
-      bool flagged, String listid,String priorityid) async {
+      bool isfavourite, String listid, String priorityid) async {
     var url = "$ipAddress/addItem.php";
     var data = {
       "name": name,
       "description": description,
       "url": inputUrl,
-      "flagged": flagged ? "1" : "0",
+      "favourite": isfavourite ? "1" : "0",
       "listid": listid,
       "priorityid": priorityid != null ? priorityid : "1"
     };
@@ -25,14 +25,13 @@ class ItemService {
   }
 
   Future<bool> updateItem(String name, String description, String inputUrl,
-      bool flagged, String id, String priorityid) async {
-    print(flagged);
+      bool isfavourite, String id, String priorityid) async {
     var url = "$ipAddress/updateItem.php";
     var data = {
       "name": name,
       "description": description,
       "url": inputUrl,
-      "flagged": flagged ? "1" : "0",
+      "favorite": isfavourite ? "1" : "0",
       'id': id,
       'priorityid': priorityid != null ? priorityid : "1"
     };
@@ -140,12 +139,12 @@ class ItemService {
     return false;
   }
 
-  Future<bool> flagItem(String id, bool flag) async {
+  Future<bool> favouriteItem(String id, bool isFavorite) async {
     if (id != null) {
-      var url = "$ipAddress/flagItem.php";
+      var url = "$ipAddress/favouriteItem.php";
       var data = {
         "id": id,
-        "flag": flag ? "0" : "1",
+        "favourite": isFavorite ? "0" : "1",
       };
       var response = await http.post(url, body: data);
       if (jsonDecode(response.body) == "success") {
@@ -207,5 +206,17 @@ class ItemService {
     var url = "$ipAddress/getPriority.php";
     final response = await http.get(url);
     return priorityModelFromJson(response.body);
+  }
+
+  Future<bool> deleteItemsBasedOnList(int listid) async {
+    var url = "$ipAddress/deleteItemsBasedOnList.php";
+    var data = {
+      "listid": listid.toString(),
+    };
+    var response = await http.post(url, body: data);
+    if (jsonDecode(response.body) == "success") {
+      return true;
+    }
+    return false;
   }
 }

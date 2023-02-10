@@ -15,7 +15,7 @@ class ItemModel {
     this.position,
     this.url,
     this.description,
-    this.isflagged,
+    this.isfavourite,
     this.isarchive,
     this.priorityid,
     this.pname,
@@ -29,7 +29,7 @@ class ItemModel {
   String position;
   String url;
   String description;
-  bool isflagged;
+  bool isfavourite;
   String priorityid;
   String pname;
 
@@ -41,7 +41,7 @@ class ItemModel {
       position: json["position"],
       url: json["url"],
       description: json["description"],
-      isflagged: json["isflagged"],
+      isfavourite: json["isfavourite"],
       isarchive: json["isarchive"],
       priorityid: json["priorityid"],
       pname: json["pname"]);
@@ -54,7 +54,7 @@ class ItemModel {
         "position": position,
         "url": url,
         "description": description,
-        "isflagged": isflagged,
+        "isfavourite": isfavourite,
         "isarchive": isarchive,
         "priorityid": priorityid,
         "pname": pname

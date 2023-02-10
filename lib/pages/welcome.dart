@@ -13,8 +13,9 @@ class Welcome extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height:70),
               Container(
-                child: Text('Welcome to Notes', style: header),
+                child: Text('Welcome to Notes', style: Theme.of(context).textTheme.headline1),
               ),
               Lottie.asset('assets/images/todo.json',
                   height: 350, animate: true),

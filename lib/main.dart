@@ -1,10 +1,10 @@
 import 'package:L1_sean/pages/additem.dart';
 import 'package:L1_sean/pages/addlist.dart';
 import 'package:L1_sean/pages/IndividualList.dart';
-import 'package:L1_sean/pages/all.dart';
-import 'package:L1_sean/pages/archived.dart';
+import 'package:L1_sean/pages/display.dart';
 import 'package:L1_sean/pages/login.dart';
 import 'package:L1_sean/pages/priority.dart';
+import 'package:L1_sean/pages/profile.dart';
 import 'package:L1_sean/pages/signup.dart';
 import 'package:L1_sean/provider/itemProvider.dart';
 import 'package:L1_sean/provider/userProvider.dart';
@@ -58,11 +58,13 @@ class App extends StatelessWidget {
             if (settings.arguments != null) {
               Map<String, dynamic> args = settings.arguments;
               return MaterialPageRoute(
-                  builder: (context) => AddList(
-                      id: args['id'],
-                      iconid: args['iconid'],
-                      colorid: args['colorid'],
-                      listname: args['listname']));
+                builder: (context) => AddList(
+                    id: args['id'],
+                    iconid: args['iconid'],
+                    colorid: args['colorid'],
+                    listname: args['listname'],
+                    categoryid: args['categoryid']),
+              );
             } else {
               return MaterialPageRoute(builder: (context) => AddList());
             }
@@ -87,24 +89,21 @@ class App extends StatelessWidget {
                     child: AddItem(
                         item: args['item'],
                         listname: args['listname'],
-                        isflagged: args['isflagged'],
+                        isfavourite: args['isfavourite'],
                         priorityid: args['priorityid'],
                         pname: args['pname']),
                     type: PageTransitionType.bottomToTop);
               }
             }
             break;
-          case '/all':
-            return PageTransition(
-                duration: Duration(milliseconds: 300),
-                child: All(),
-                type: PageTransitionType.rightToLeft);
-            break;
-          case '/archived':
-            return PageTransition(
-                duration: Duration(milliseconds: 300),
-                child: Archived(),
-                type: PageTransitionType.rightToLeft);
+          case '/displays':
+            if (settings.arguments != null) {
+              Map<String, dynamic> args = settings.arguments;
+              return PageTransition(
+                  duration: Duration(milliseconds: 300),
+                  child: Display(page: args['page'],),
+                  type: PageTransitionType.rightToLeft);
+            }
             break;
           case '/priority':
             if (settings.arguments != null) {
@@ -119,7 +118,6 @@ class App extends StatelessWidget {
                   ),
                   type: PageTransitionType.rightToLeft);
             }
-
             break;
         }
       },
@@ -128,9 +126,7 @@ class App extends StatelessWidget {
         "/login": (context) => Login(),
         "/signup": (context) => Signup(),
         "/home": (context) => Home(),
-        // "/addlist": (context) => AddList(),
-        // '/list': (context) => IndividualList(),
-        // '/all': (context) => All(),
+        "/profile": (context) => Profile(),
       },
     );
   }

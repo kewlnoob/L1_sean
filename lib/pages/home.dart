@@ -2,6 +2,7 @@ import 'package:L1_sean/model/menuitem.dart';
 import 'package:L1_sean/pages/about.dart';
 import 'package:L1_sean/pages/homemenu.dart';
 import 'package:L1_sean/pages/profile.dart';
+import 'package:L1_sean/pages/statistics.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'drawer.dart';
@@ -47,6 +48,8 @@ class _HomeState extends State<Home> {
         return About();
       case "Profile":
         return Profile();
+      case "Statistics":
+        return Statistics();
     }
   }
 }

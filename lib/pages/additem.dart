@@ -15,14 +15,14 @@ class AddItem extends StatefulWidget {
   final int listid;
   final ItemModel item;
   final String listname;
-  final bool isflagged;
+  final bool isfavourite;
   final String priorityid;
   final String pname;
   const AddItem(
       {this.listid,
       this.item,
       this.listname,
-      this.isflagged,
+      this.isfavourite,
       this.priorityid,
       this.pname});
 
@@ -33,7 +33,7 @@ class AddItem extends StatefulWidget {
 class _AddItemState extends State<AddItem> {
   bool _back = false;
   bool _check = false;
-  bool isFlagged = false;
+  bool isfavourite = false;
   var status;
   var nameController = TextEditingController();
   var descController = TextEditingController();
@@ -45,13 +45,13 @@ class _AddItemState extends State<AddItem> {
     if (widget.item != null &&
         widget.listid == null &&
         widget.listname != null &&
-        widget.isflagged != null &&
+        widget.isfavourite != null &&
         widget.pname != null &&
         widget.priorityid != null) {
       nameController.text = widget.item.name;
       descController.text = widget.item.description;
       urlController.text = widget.item.url;
-      isFlagged = widget.isflagged;
+      isfavourite = widget.isfavourite;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         var provider = Provider.of<ItemProvider>(context, listen: false);
         print(widget.priorityid);
@@ -126,7 +126,7 @@ class _AddItemState extends State<AddItem> {
                         nameController.text,
                         desc,
                         urlController.text,
-                        isFlagged,
+                        isfavourite,
                         widget.item.id.toString(),
                         selectedIndex);
                     setState(() => {_check = true});
@@ -148,7 +148,7 @@ class _AddItemState extends State<AddItem> {
                           nameController.text,
                           desc,
                           urlController.text,
-                          isFlagged,
+                          isfavourite,
                           widget.listid.toString(),
                           selectedIndex);
                       setState(() => {_check = true});
@@ -311,13 +311,13 @@ class _AddItemState extends State<AddItem> {
                             ),
                             padding: EdgeInsets.all(6),
                             child: Icon(
-                              Foundation.flag,
+                              AntDesign.star,
                               size: 20,
                               color: Colors.white,
                             ),
                           ),
                           Text(
-                            'Flagged',
+                            'Favourite',
                             style: Theme.of(context).textTheme.headline2,
                           ),
                         ],
@@ -325,10 +325,10 @@ class _AddItemState extends State<AddItem> {
                       CupertinoSwitch(
                         trackColor: Colors.grey,
                         activeColor: Colors.greenAccent,
-                        value: isFlagged,
+                        value: isfavourite,
                         onChanged: (value) => {
                           print(value),
-                          setState(() => {isFlagged = value})
+                          setState(() => {isfavourite = value})
                         },
                       ),
                     ],

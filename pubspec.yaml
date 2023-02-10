@@ -32,7 +32,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # flutter_svg:
   page_transition:
   flutter_styled_toast:
   provider:
@@ -42,14 +41,15 @@ dev_dependencies:
   http:
   shared_preferences:
   simple_animations:
-  # bouncing_widget:
   widget_circular_animator:
   roundcheckbox:
   flutter_vector_icons:
-  # flutter_typeahead:
   animations:
+  modal_bottom_sheet:
+  image_picker:
   # shimmer:
-  # rive:
+  url_launcher:
+  percent_indicator:
   day_night_switcher:
   group_list_view:
   app_popup_menu:

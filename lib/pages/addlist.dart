@@ -1,3 +1,4 @@
+import 'package:L1_sean/model/categoryModel.dart';
 import 'package:L1_sean/model/colorModel.dart';
 import 'package:L1_sean/model/iconModel.dart';
 import 'package:L1_sean/provider/userProvider.dart';
@@ -13,8 +14,9 @@ class AddList extends StatefulWidget {
   final int iconid;
   final int colorid;
   final String listname;
+  final String categoryid;
 
-  const AddList({Key key, this.id, this.iconid, this.colorid, this.listname})
+  const AddList({Key key, this.id, this.iconid, this.colorid, this.listname,this.categoryid})
       : super(key: key);
   @override
   State<AddList> createState() => _AddListState();
@@ -23,22 +25,25 @@ class AddList extends StatefulWidget {
 class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
   final myController = TextEditingController();
   AnimationController controller;
-
+  bool _isPanDown = false;
   int selectedColorIndex;
   int selectedIconIndex;
   List<ColorModel> colorlist;
-  var iconlist;
-
+  List<IconModel> iconlist;
+  List<CategoryModel> categorylist;
+  String selectedCategory;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     colorlist = Provider.of<UserProvider>(context, listen: false).colorList;
     iconlist = Provider.of<UserProvider>(context, listen: false).iconList;
+    // categorylist = Provider.of<UserProvider>(context, listen: false).categoryList;
     if (widget.id != null) {
       selectedIconIndex = widget.iconid - 1;
       selectedColorIndex = widget.colorid - 1;
       myController.text = widget.listname;
+      selectedCategory = widget.categoryid;
     }
     controller = AnimationController(
       duration: Duration(seconds: 2),
@@ -83,13 +88,14 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                     onTap: () async {
                       if (myController.text != null &&
                           selectedColorIndex != null &&
-                          selectedIconIndex != null) {
+                          selectedIconIndex != null && selectedCategory != null) {
                         if (widget.id != null) {
                           var editList = await ListService().editList(
                               widget.id,
                               myController.text,
                               selectedColorIndex + 1,
-                              selectedIconIndex + 1);
+                              selectedIconIndex + 1,
+                              selectedCategory);
                           if (editList) {
                             displayDialog('Success!', context, controller, true,
                                 'addlist');
@@ -101,7 +107,8 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                           var addList = await ListService().addList(
                               myController.text,
                               selectedIconIndex + 1,
-                              selectedColorIndex + 1);
+                              selectedColorIndex + 1,
+                              selectedCategory);
 
                           if (addList) {
                             displayDialog('Success!', context, controller, true,
@@ -112,7 +119,7 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                           }
                         }
                       } else {
-                        displayToast("There must be a name,icon and color",
+                        displayToast("There must be a name,icon,color & category",
                             context, failColor);
                       }
                     },
@@ -231,6 +238,57 @@ class _AddListState extends State<AddList> with SingleTickerProviderStateMixin {
                           ),
                         ),
                         margin20,
+                        FutureBuilder(
+                          future: ListService().fetchCategory(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? mainBGLightColor
+                                      : mainBGDarkColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? [
+                                          MyShadows.primaryLightShadow,
+                                          MyShadows.secondaryLightShadow
+                                        ]
+                                      : [
+                                          MyShadows.primaryDarkShadow,
+                                          MyShadows.secondaryDarkShadow
+                                        ],
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                                child: DropdownButtonHideUnderline(
+                                  child: ButtonTheme(
+                                    alignedDropdown: true,
+                                    child: DropdownButton(
+                                      hint: Text('Select a category'),
+                                      isExpanded: true,
+                                      value: selectedCategory,
+                                      items: snapshot.data
+                                          .map<DropdownMenuItem<String>>(
+                                              (category) {
+                                        return DropdownMenuItem<String>(
+                                          child: Text(category.categoryName),
+                                          value: category.categoryId,
+                                        );
+                                      }).toList(),
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          selectedCategory = newValue;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
                         margin20,
                         Container(
                           constraints: BoxConstraints(

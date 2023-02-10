@@ -10,6 +10,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeMenu extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
   AnimationController popup;
   AnimationController controller;
   AnimationController slideController;
+  final categoryText = TextEditingController();
   bool isActive = false;
   bool animated = true;
   String allCount;
@@ -55,7 +58,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
     var all = await ListService().fetchAllCount();
     var archive = await ListService().fetchArchiveCount();
     var complete = await ListService().fetchCompleteCount();
-    var flag = await ListService().fetchFlagCount();
+    var flag = await ListService().fetchFavouriteCount();
     setState(() {
       allCount = all;
       archiveCount = archive;
@@ -67,6 +70,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
   void asyncMethod() async {
     await Provider.of<UserProvider>(context, listen: false).getColorList();
     await Provider.of<UserProvider>(context, listen: false).getIconList();
+    await Provider.of<UserProvider>(context, listen: false).getCategory();
   }
 
   void animate() {
@@ -83,11 +87,11 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
     super.dispose();
     controller.dispose();
     slideController.dispose();
+    categoryText.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<UserProvider>(context);
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
@@ -184,14 +188,14 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                                 1.5,
                                 'up',
                                 displays(
-                                    Foundation.flag,
-                                    'Flagged',
+                                    AntDesign.star,
+                                    'Favourite',
                                     Colors.orange[300],
                                     flagCount != null ? flagCount : "0",
                                     context))
                             : displays(
-                                Foundation.flag,
-                                'Flagged',
+                                AntDesign.star,
+                                'Favourite',
                                 Colors.orange[300],
                                 flagCount != null ? flagCount : "0",
                                 context)
@@ -232,9 +236,84 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                             overlayColor:
                                 MaterialStateProperty.all(Colors.transparent),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            showMaterialModalBottomSheet(
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(50),
+                                    topLeft: Radius.circular(50)),
+                              ),
+                              context: context,
+                              builder: (context) => Container(
+                                height: 200,
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 50),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.7,
+                                      child: TextField(
+                                        controller: categoryText,
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .iconTheme
+                                                  .color,
+                                              width: 2,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color,
+                                                width: 2),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          border: OutlineInputBorder(),
+                                          hintText: 'New Category',
+                                        ),
+                                      ),
+                                    ),
+                                    margin20,
+                                    ElevatedButton(
+                                      child: Text(
+                                        "Add Category",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.red,
+                                        elevation: 0,
+                                      ),
+                                      onPressed: () async {
+                                        if (categoryText.text.isNotEmpty) {
+                                          var category = await ListService()
+                                              .addCategory(categoryText.text);
+                                          if (category) {
+                                            Navigator.pop(context);
+                                            categoryText.clear();
+                                            displayDialog('Success!', context,
+                                                popup, true, 'homemenu');
+                                          }
+                                          return;
+                                        }
+                                        displayDialog('Please Enter A Category',
+                                            context, popup, false, 'homemenu');
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                           child: Text(
-                            'New Item',
+                            'New Category',
                             style: Theme.of(context).textTheme.headline2,
                           )),
                     ),
@@ -268,7 +347,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
     return FutureBuilder(
         future: ListService().fetchList(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data.length > 0) {
             var item = snapshot.data;
             return ConstrainedBox(
               constraints: BoxConstraints(
@@ -302,13 +381,17 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                               color: thirdColor,
                               icon: Feather.info,
                               onTap: () {
-                                Navigator.pushNamed(context, '/addlist',
-                                    arguments: {
-                                      'iconid': int.parse(item[index].iconid),
-                                      'colorid': int.parse(item[index].colorid),
-                                      'id': item[index].id,
-                                      'listname': item[index].listname,
-                                    });
+                                Navigator.pushNamed(
+                                  context,
+                                  '/addlist',
+                                  arguments: {
+                                    'iconid': int.parse(item[index].iconid),
+                                    'colorid': int.parse(item[index].colorid),
+                                    'id': item[index].id,
+                                    'listname': item[index].listname,
+                                    'categoryid': item[index].categoryid
+                                  },
+                                );
                               },
                             ),
                             IconSlideAction(
@@ -333,11 +416,12 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                           ],
                           child: Container(
                             decoration: BoxDecoration(
-                                color: secondaryColor,
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/dashboard.png'),
-                                    fit: BoxFit.fill)),
+                              color: secondaryColor,
+                              image: DecorationImage(
+                                  image:
+                                      AssetImage('assets/images/dashboard.png'),
+                                  fit: BoxFit.fill),
+                            ),
                             width: MediaQuery.of(context).size.width,
                             child: Container(
                               decoration: BoxDecoration(
@@ -373,6 +457,12 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                   },
                 ),
               ),
+            );
+          } else if (snapshot.hasData) {
+            return Container(
+              alignment: Alignment.center,
+              child: Lottie.asset('assets/images/empty.json',
+                  height: 300, animate: true),
             );
           }
           return CircularProgressIndicator();

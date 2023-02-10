@@ -12,6 +12,7 @@ class ListModel {
         this.icon,
         this.colorid,
         this.iconid,
+        this.categoryid,
     });
 
     String id;
@@ -20,6 +21,7 @@ class ListModel {
     String icon;
     String colorid;
     String iconid;
+    String categoryid;
 
     factory ListModel.fromJson(Map<String, dynamic> json) => ListModel(
         id: json["id"],
@@ -28,6 +30,7 @@ class ListModel {
         icon: json["icon"],
         colorid: json["colorid"],
         iconid: json["iconid"],
+        categoryid: json["categoryid"]
     );
 
     Map<String, dynamic> toJson() => {
@@ -37,5 +40,6 @@ class ListModel {
         "icon": icon,
         "colorid": colorid,
         "iconid": iconid,
+        "categoryid":categoryid
     };
 }

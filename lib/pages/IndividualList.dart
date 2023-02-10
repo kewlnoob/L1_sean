@@ -3,6 +3,7 @@ import 'package:L1_sean/model/itemModel.dart';
 import 'package:L1_sean/pages/additem.dart';
 import 'package:L1_sean/provider/userProvider.dart';
 import 'package:L1_sean/services/itemService.dart';
+import 'package:L1_sean/services/listService.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:L1_sean/utils/popup.dart';
 import 'package:L1_sean/widgets/arrows.dart';
@@ -15,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:animations/animations.dart';
+import 'package:lottie/lottie.dart';
 
 class IndividualList extends StatefulWidget {
   final int listid;
@@ -42,6 +44,38 @@ class _IndividualListState extends State<IndividualList> {
     });
   }
 
+  Widget displayText(String id) {
+    switch (id) {
+      case "2":
+        return Container(
+          width: 60,
+          child: Text(
+            'Low',
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        );
+        break;
+      case "3":
+        return Container(
+          width: 60,
+          child: Text(
+            'Medium',
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        );
+        break;
+      case "4":
+        return Container(
+          width: 60,
+          child: Text(
+            'High',
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        );
+        break;
+    }
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -60,23 +94,9 @@ class _IndividualListState extends State<IndividualList> {
             children: [ButtonArrow(context, 'home')],
           ),
           elevation: 0,
-          title: Container(
-            height: 30,
-            width: 60,
-            child: TextField(
-              focusNode: _searchFocus,
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: "Search",
-                hintText: "Search",
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(25.0),
-                  ),
-                ),
-              ),
-            ),
+          title: Text(
+            '${widget.listname}',
+            style: Theme.of(context).textTheme.headline2,
           ),
           centerTitle: true,
           flexibleSpace: Container(),
@@ -104,7 +124,10 @@ class _IndividualListState extends State<IndividualList> {
                               _focusedIndex = null;
                             });
                           },
-                          child: Text('Done'),
+                          child: Text(
+                            'Done',
+                            style: Theme.of(context).textTheme.headline2,
+                          ),
                         )
                       : AppPopupMenu(
                           offset: const Offset(0, 200),
@@ -142,7 +165,20 @@ class _IndividualListState extends State<IndividualList> {
                               ),
                             ),
                           ],
-                          onSelected: (int value) async {},
+                          onSelected: (int value) async {
+                            switch(value){
+                              case 1:
+                              break;
+                              case 2:
+                                var delete = await ItemService().deleteItemsBasedOnList(widget.listid);
+                                if(delete){
+                                  displayToast("All items deleted", context, successColor);
+                                }else{
+                                  displayToast("Unable to delete items", context, failColor);
+                                }
+                              break;
+                            }
+                          },
                         ),
                 )
               ],
@@ -153,13 +189,23 @@ class _IndividualListState extends State<IndividualList> {
       body: SafeArea(
         child: Column(
           children: [
-            // margin20,
             Container(
-              margin: EdgeInsets.only(left: 20),
-              alignment: Alignment.topLeft,
-              child: Text(
-                '${widget.listname}',
-                style: Theme.of(context).textTheme.headline1,
+              height: 30,
+              width: 200,
+              child: Align(
+                alignment: Alignment.center,
+                child: TextField(
+                  focusNode: _searchFocus,
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(25.0),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
             margin20,
@@ -167,7 +213,13 @@ class _IndividualListState extends State<IndividualList> {
                 child: FutureBuilder(
               future: ItemService().fetchItems(widget.listid),
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
+                if (snapshot.hasData && snapshot.data.length == 0) {
+                  return Container(
+                    alignment: Alignment.center,
+                    child: Lottie.asset('assets/images/empty.json',
+                        height: 500, animate: true),
+                  );
+                } else if (snapshot.hasData && snapshot.data.length > 0) {
                   List<ItemModel> data = snapshot.data;
                   List<ItemMapper> _text = [];
                   data.forEach((item) {
@@ -201,28 +253,30 @@ class _IndividualListState extends State<IndividualList> {
                         height: 70,
                         key: ValueKey(item),
                         child: Slidable(
+                          key: ValueKey(item),
                           secondaryActions: [
                             IconSlideAction(
-                                caption:
-                                    item.isflagged ? 'Unflagged' : 'Flagged',
+                                caption: item.isfavourite
+                                    ? 'Unfavourite'
+                                    : 'Favourite',
                                 color: Colors.orange[300],
-                                icon: Foundation.flag,
+                                icon: AntDesign.star,
                                 foregroundColor: Colors.white,
                                 onTap: () async {
-                                  var prev = item.isflagged;
-                                  var flag = await ItemService()
-                                      .flagItem(item.id, item.isflagged);
-                                  if (flag) {
+                                  var prev = item.isfavourite;
+                                  var favourite = await ItemService()
+                                      .favouriteItem(item.id, item.isfavourite);
+                                  if (favourite) {
                                     setState(() {});
                                     displayToast(
                                         prev
-                                            ? 'Item has been Unflagged'
-                                            : 'Item has been Flagged',
+                                            ? 'Item has been Unfavourite'
+                                            : 'Item has been Favourite',
                                         context,
                                         successColor);
                                   } else {
                                     displayToast(
-                                        'Flagged failed', context, failColor);
+                                        'Favourite failed', context, failColor);
                                   }
                                 }),
                             IconSlideAction(
@@ -266,7 +320,7 @@ class _IndividualListState extends State<IndividualList> {
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
-                                  color: Colors.black,
+                                  color: Theme.of(context).iconTheme.color,
                                   width: 1,
                                 ),
                               ),
@@ -282,31 +336,24 @@ class _IndividualListState extends State<IndividualList> {
                                   });
                                 }
                               },
-                              leading: Container(
-                                margin: EdgeInsets.only(left: 20, right: 10),
-                                child: RoundCheckBox(
-                                    isChecked: item.iscompleted,
-                                    onTap: (bool value) async {
-                                      var update = await ItemService()
-                                          .checkItem(value, int.parse(item.id));
-                                      if (update) {
-                                        setState(() {
-                                          item.iscompleted = value;
-                                        });
-                                      }
-                                    },
-                                    size: 25,
-                                    checkedColor: backgroundColor,
-                                    checkedWidget: Icon(
-                                      Icons.circle,
-                                      size: 20,
-                                      color: Colors.black,
-                                    )),
+                              leading: Checkbox(
+                                checkColor: Colors.white,
+                                value: item.iscompleted,
+                                onChanged: (bool value) async {
+                                  var update = await ItemService()
+                                      .checkItem(value, int.parse(item.id));
+                                  if (update) {
+                                    setState(() {
+                                      item.iscompleted = value;
+                                    });
+                                  }
+                                },
                               ),
                               title: Row(
                                 children: [
                                   AbsorbPointer(
                                     child: Container(
+                                      alignment: Alignment.center,
                                       width: 200,
                                       child: TextField(
                                         key: ValueKey(item),
@@ -314,10 +361,9 @@ class _IndividualListState extends State<IndividualList> {
                                                 index == _focusedIndex
                                             ? true
                                             : false,
-                                        style: TextStyle(
-                                            decoration: item.iscompleted
-                                                ? TextDecoration.lineThrough
-                                                : TextDecoration.none),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline2,
                                         controller:
                                             _text[index].textEditingController,
                                         decoration: InputDecoration(
@@ -325,20 +371,14 @@ class _IndividualListState extends State<IndividualList> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 50,
-                                  ),
-                                  item.isflagged
-                                      ? Icon(Foundation.flag,
+                                  item.priorityid == "1"
+                                      ? Container(width: 1)
+                                      : displayText(item.priorityid),
+                                  item.isfavourite
+                                      ? Icon(AntDesign.star,
                                           color: Colors.orange[300])
                                       : Container(),
                                 ],
-                              ),
-                              subtitle: Text(
-                                item.description != null
-                                    ? item.description.toString()
-                                    : "",
-                                style: TextStyle(color: Colors.grey[500]),
                               ),
                               trailing: _focusedIndex != null &&
                                       _focusedIndex == index
@@ -348,14 +388,15 @@ class _IndividualListState extends State<IndividualList> {
                                             arguments: {
                                               "item": item,
                                               "listname": widget.listname,
-                                              "isflagged": item.isflagged,
+                                              "isfavourite": item.isfavourite,
                                               "priorityid": item.priorityid,
                                               "pname": item.pname
                                             });
                                       },
                                       child: Container(
-                                          margin: EdgeInsets.only(right: 20),
-                                          child: Icon(Feather.info)),
+                                        margin: EdgeInsets.only(right: 20),
+                                        child: Icon(Feather.info),
+                                      ),
                                     )
                                   : null,
                             ),
@@ -373,41 +414,15 @@ class _IndividualListState extends State<IndividualList> {
       ),
       floatingActionButton: Container(
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Theme.of(context).brightness == Brightness.light
-              ? mainBGLightColor
-              : mainBGDarkColor,
-          boxShadow: Theme.of(context).brightness == Brightness.light
-              ? [
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(-4, -4),
-                    blurRadius: 15,
-                    spreadRadius: 0.1,
-                  ),
-                  BoxShadow(
-                    color: Colors.black,
-                    offset: Offset(4, 4),
-                    blurRadius: 15,
-                    spreadRadius: 0.1,
-                  )
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.grey[800],
-                    offset: Offset(-4, -4),
-                    blurRadius: 15,
-                    spreadRadius: 0.1,
-                  ),
-                  BoxShadow(
-                    color: Colors.black,
-                    offset: Offset(4, 4),
-                    blurRadius: 15,
-                    spreadRadius: 0.1,
-                  ),
-                ],
-        ),
+            shape: BoxShape.circle,
+            color: Theme.of(context).brightness == Brightness.light
+                ? mainBGLightColor
+                : mainBGDarkColor,
+            border:
+                Border.all(color: Theme.of(context).iconTheme.color, width: 2)),
         child: OpenContainer(
+            openElevation: 0,
+            closedElevation: 0,
             onClosed: (data) {
               //refresh page
               setState(() {});
@@ -422,7 +437,8 @@ class _IndividualListState extends State<IndividualList> {
               return Container(
                 height: 50,
                 width: 50,
-                child: Icon(Icons.add, color: Colors.white),
+                child:
+                    Icon(Icons.add, color: Theme.of(context).iconTheme.color),
               );
             }),
       ),

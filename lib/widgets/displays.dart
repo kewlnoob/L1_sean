@@ -6,14 +6,7 @@ Widget displays(IconData icon, String text, Color color, String count,
     BuildContext context) {
   return GestureDetector(
     onTap: () {
-      switch (text) {
-        case 'All':
-          Navigator.pushNamed(context, "/all");
-          break;
-        case 'Archived':
-          Navigator.pushNamed(context, "/archived");
-          break;
-      }
+      Navigator.pushNamed(context, "/displays",arguments: {"page": text});
     },
     child: Container(
       height: 70,

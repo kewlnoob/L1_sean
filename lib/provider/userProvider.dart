@@ -1,3 +1,4 @@
+import 'package:L1_sean/model/categoryModel.dart';
 import 'package:L1_sean/model/colorModel.dart';
 import 'package:L1_sean/model/iconModel.dart';
 import 'package:L1_sean/model/itemModel.dart';
@@ -10,18 +11,23 @@ import 'package:http/http.dart' as http;
 class UserProvider extends ChangeNotifier {
   List<ColorModel> colorList;
   List<IconModel> iconList;
+  List<CategoryModel> categoryList;
   ThemeMode themeMode = ThemeMode.light;
 
   bool get isDarkMode => themeMode == ThemeMode.dark;
 
-  Future<List<ColorModel>> getColorList() async {
+  getColorList() async {
     colorList = await ListService().fetchColors();
     notifyListeners();
-    return colorList;
   }
 
   getIconList() async {
     iconList = await ListService().fetchIcons();
+    notifyListeners();
+  }
+
+  getCategory() async {
+    categoryList = await ListService().fetchCategory();
     notifyListeners();
   }
 
@@ -33,9 +39,7 @@ class UserProvider extends ChangeNotifier {
 
 class MyThemes {
   static final darkTheme = ThemeData(
-    iconTheme: IconThemeData(
-      color: mainBGLightColor
-    ),
+    iconTheme: IconThemeData(color: mainBGLightColor),
     scaffoldBackgroundColor: Colors.grey[900],
     colorScheme: ColorScheme.dark(),
     textTheme: TextTheme(
@@ -54,12 +58,15 @@ class MyThemes {
         color: mainlightTextColor,
         fontSize: 15,
       ),
+      headline4: TextStyle(
+        fontFamily: 'SansPro-Bold',
+        color: mainlightTextColor,
+        fontSize: 14,
+      ),
     ),
   );
   static final lightTheme = ThemeData(
-    iconTheme: IconThemeData(
-      color: mainBGDarkColor
-    ),
+    iconTheme: IconThemeData(color: mainBGDarkColor),
     scaffoldBackgroundColor: mainBGLightColor,
     colorScheme: ColorScheme.light(),
     textTheme: TextTheme(
@@ -77,6 +84,11 @@ class MyThemes {
         fontFamily: 'SansPro-Bold',
         color: mainDarkTextColor,
         fontSize: 15,
+      ),
+      headline4: TextStyle(
+        fontFamily: 'SansPro-Bold',
+        color: mainDarkTextColor,
+        fontSize: 14,
       ),
     ),
   );
@@ -97,7 +109,7 @@ class MyShadows {
     spreadRadius: 1,
   );
 
-    static var primaryDarkShadow = BoxShadow(
+  static var primaryDarkShadow = BoxShadow(
     color: Colors.black,
     offset: Offset(4, 4),
     blurRadius: 15,

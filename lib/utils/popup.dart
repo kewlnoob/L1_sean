@@ -46,9 +46,12 @@ Future displayDialog(msg, context, controller, boolean, page) {
                 controller.forward().whenComplete(() {
                   Navigator.pushNamed(context, "/home");
                 });
-              break;
+                break;
               case "homemenu":
-              controller.forward();
+                controller.forward();
+                break;
+              case "profile":
+                controller.forward();
             }
           } else {
             controller.forward();
@@ -56,7 +59,7 @@ Future displayDialog(msg, context, controller, boolean, page) {
         }),
         Text(
           msg,
-          style: secondaryText,
+          style:  Theme.of(context).textTheme.headline2,
         ),
         margin20
       ],

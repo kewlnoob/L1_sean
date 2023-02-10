@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
               children: [
                 ButtonArrow(context, 'welcome'),
                 Container(
-                  child: Text('Login', style: header),
+                  child: Text('Login', style: Theme.of(context).textTheme.headline1),
                 ),
                 Lottie.asset('assets/images/login.json',
                     height: 300, animate: true),
@@ -133,10 +133,12 @@ class _LoginState extends State<Login> {
           style: TextStyle(color: Colors.grey[600]),
         ),
         InkWell(
+          highlightColor:Colors.transparent,
+          focusColor: Colors.transparent,
           splashColor: Colors.transparent,
           child: Text(
             'Sign Up',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.headline4,
           ),
           onTap: () {
             Navigator.pushNamed(context, '/signup');

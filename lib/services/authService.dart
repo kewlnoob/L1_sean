@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:image_picker/image_picker.dart';
 class AuthService {
   Future<bool> register(String username, String email, String password,
       BuildContext context) async {
@@ -72,5 +72,40 @@ class AuthService {
       return UserModel.fromJson(jsonDecode(response.body));
     }
     return null;
+  }
+
+  Future<bool> uploadImage(PickedFile imageFile) async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+    if (value != null) {
+      var url = Uri.parse("$ipAddress/uploadImage.php");
+      var response = http.MultipartRequest("POST", url);
+      http.MultipartFile multipartFile =
+        await http.MultipartFile.fromPath('image', imageFile.path);
+      response.files.add(multipartFile);
+      response.fields['id'] = jsonDecode(value)['userid'];
+      http.StreamedResponse request = await response.send();
+      if (request.statusCode == 200) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> editProfile(String username,String email,String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+    if (value != null) {
+      var data = {
+        "userid": jsonDecode(value)['userid'],
+        "password":password,
+        "email":email,
+        "username":username,
+      };
+      var url = Uri.parse("$ipAddress/editProfile.php");
+      var response = await http.post(url,body: data);
+      if(jsonDecode(response.body) == "success") return true;
+    }
+    return false;
   }
 }
