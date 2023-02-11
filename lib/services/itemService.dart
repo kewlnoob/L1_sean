@@ -42,10 +42,11 @@ class ItemService {
     return false;
   }
 
-  Future<List<ItemModel>> fetchItems(int listid) async {
+  Future<List<ItemModel>> fetchItems(int listid,String hideCompleted) async {
+    print(hideCompleted);
     if (listid == null) return null;
 
-    var url = "$ipAddress/getItems.php?listid=" + listid.toString();
+    var url = "$ipAddress/getItems.php?listid=" + listid.toString() + "&hideCompleted=" + hideCompleted;
     final response = await http.get(url);
     List<ItemModel> json = itemFromJson(response.body);
     for (var i = 0; i < json.length; i++) {

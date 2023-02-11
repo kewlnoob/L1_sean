@@ -30,6 +30,7 @@ class IndividualList extends StatefulWidget {
 
 class _IndividualListState extends State<IndividualList> {
   int _focusedIndex;
+  bool hideCompleted = false;
   List<ItemMapper> outerItems = [];
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
@@ -143,9 +144,9 @@ class _IndividualListState extends State<IndividualList> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Show Completed',
+                                  Text(hideCompleted ? 'Show Completed': 'Hide Completed',
                                       style: TextStyle(fontSize: 13)),
-                                  Icon(Feather.eye),
+                                  hideCompleted ? Icon(Feather.eye) : Icon(Feather.eye_off),
                                 ],
                               ),
                             ),
@@ -166,17 +167,23 @@ class _IndividualListState extends State<IndividualList> {
                             ),
                           ],
                           onSelected: (int value) async {
-                            switch(value){
+                            switch (value) {
                               case 1:
-                              break;
+                                  setState(() {
+                                    hideCompleted = !hideCompleted;
+                                  });
+                                break;
                               case 2:
-                                var delete = await ItemService().deleteItemsBasedOnList(widget.listid);
-                                if(delete){
-                                  displayToast("All items deleted", context, successColor);
-                                }else{
-                                  displayToast("Unable to delete items", context, failColor);
+                                var delete = await ItemService()
+                                    .deleteItemsBasedOnList(widget.listid);
+                                if (delete) {
+                                  displayToast("All items deleted", context,
+                                      successColor);
+                                } else {
+                                  displayToast("Unable to delete items",
+                                      context, failColor);
                                 }
-                              break;
+                                break;
                             }
                           },
                         ),
@@ -211,7 +218,7 @@ class _IndividualListState extends State<IndividualList> {
             margin20,
             Expanded(
                 child: FutureBuilder(
-              future: ItemService().fetchItems(widget.listid),
+              future: hideCompleted ? ItemService().fetchItems(widget.listid,'hide') : ItemService().fetchItems(widget.listid,'show'),
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.data.length == 0) {
                   return Container(

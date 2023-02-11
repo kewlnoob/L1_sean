@@ -22,7 +22,7 @@ class Display extends StatefulWidget {
 }
 
 class _DisplayState extends State<Display> {
-  bool showCompleted = false;
+  List<String> listIds = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -78,94 +78,6 @@ class _DisplayState extends State<Display> {
     }
   }
 
-  List<PopupMenuItem<int>> popups() {
-    switch (widget.page) {
-      case "All":
-        return [
-          PopupMenuItem(
-            value: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Delete All Items', style: TextStyle(fontSize: 13)),
-                Icon(
-                  MaterialCommunityIcons.delete,
-                  color: redColor,
-                ),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Delete All Lists', style: TextStyle(fontSize: 13)),
-                Icon(
-                  MaterialCommunityIcons.delete,
-                  color: redColor,
-                ),
-              ],
-            ),
-          ),
-        ];
-        break;
-      case "Archived":
-        return [
-          PopupMenuItem(
-            value: 3,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Delete All Archived Items',
-                    style: TextStyle(fontSize: 13)),
-                Icon(
-                  MaterialCommunityIcons.delete,
-                  color: redColor,
-                ),
-              ],
-            ),
-          ),
-        ];
-        break;
-      case "Completed":
-        return [
-          PopupMenuItem(
-            value: 4,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Delete All Completed Items',
-                    style: TextStyle(fontSize: 13)),
-                Icon(
-                  MaterialCommunityIcons.delete,
-                  color: redColor,
-                ),
-              ],
-            ),
-          ),
-        ];
-        break;
-      case "Favourite":
-        return [
-          PopupMenuItem(
-            value: 5,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Delete All Favourite Items', style: TextStyle(fontSize: 13)),
-                Icon(
-                  MaterialCommunityIcons.delete,
-                  color: redColor,
-                ),
-              ],
-            ),
-          ),
-        ];
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -186,18 +98,27 @@ class _DisplayState extends State<Display> {
               : IconThemeData(color: mainBGLightColor),
           actions: [
             AppPopupMenu(
-              menuItems: popups(),
+              menuItems: [
+                PopupMenuItem(
+                  value: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Delete All Lists', style: TextStyle(fontSize: 13)),
+                      Icon(
+                        MaterialCommunityIcons.delete,
+                        color: redColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               onSelected: (int value) async {
-                // if (value == 1) {
-                //   setState(() {
-                //     showCompleted = !showCompleted;
-                //   });
-                // }
                 if (value == 1) {
                   var delete = await ItemService().deleteUserLists();
                   if (delete) {
                     setState(() {});
-                    displayToast("All Items Deleted", context, successColor);
+                    displayToast("All Lists Deleted", context, successColor);
                   } else {
                     displayToast("Deletion failed", context, failColor);
                   }

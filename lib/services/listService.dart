@@ -179,8 +179,8 @@ class ListService {
     final value = prefs.getString('user');
 
     if (value != null) {
-      var url =
-          "$ipAddress/fetchFavouriteCount.php?userid=" + jsonDecode(value)['userid'];
+      var url = "$ipAddress/fetchFavouriteCount.php?userid=" +
+          jsonDecode(value)['userid'];
       final response = await http.get(url);
       if (jsonDecode(response.body)['count'] != null) {
         return jsonDecode(response.body)['count'];
@@ -230,4 +230,5 @@ class ListService {
     }
     return null;
   }
+
 }

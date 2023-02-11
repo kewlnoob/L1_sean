@@ -10,15 +10,6 @@ class ItemProvider extends ChangeNotifier {
   String priorityStatus = priority.None.toString().split('.')[0];
   String priorityid;
   var selectedIndex;
-  Future<List<ItemModel>> fetchItem(int listid) async {
-    itemList = [];
-    notifyListeners();
-    loading = true;
-    itemList = await ItemService().fetchItems(listid);
-    loading = false;
-    notifyListeners();
-    return itemList;
-  }
 
   void setPriority(pname,id) {
     priorityStatus = pname;
