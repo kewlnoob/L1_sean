@@ -1,4 +1,5 @@
 import 'package:L1_sean/model/menuitem.dart';
+import 'package:L1_sean/services/authService.dart';
 import 'package:L1_sean/utils/global.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,11 +35,12 @@ class _MyDrawerState extends State<MyDrawer> {
   }
 
   findImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final value = prefs.getString('user');
-    this.setState(() {
-      image = imagelink + jsonDecode(value)['image'];
-    });
+    var user = await AuthService().getUserInfo();
+    if(user != null){
+      this.setState(() {
+        image = imagelink + user.image;
+      });
+    }
   }
 
   @override
@@ -67,6 +69,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: Colors.grey[200]),
                     child: CircleAvatar(
+                      backgroundColor: Colors.black26,
                       radius: 520,
                       backgroundImage:
                           image != null ? NetworkImage(image) : null,

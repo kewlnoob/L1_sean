@@ -185,6 +185,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
               },
               child: CircleAvatar(
                 radius: 90,
+                backgroundColor: Colors.grey,
                 backgroundImage: NetworkImage(imagelink),
               ),
             ),
