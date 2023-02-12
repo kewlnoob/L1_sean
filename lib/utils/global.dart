@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-
-const imagelink = '${ipAddress}/images/';
 const ipAddress = "http://192.168.50.200/flutterphp";
+const imagelink = '${ipAddress}/images/';
+
 // const backgroundColor = Color(0xFFFAFAFA);
 const backgroundColor = Color(0xFFFFE1E8);
 

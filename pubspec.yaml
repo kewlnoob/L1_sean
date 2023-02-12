@@ -47,7 +47,7 @@ dev_dependencies:
   animations:
   modal_bottom_sheet:
   image_picker:
-  # shimmer:
+  shimmer:
   url_launcher:
   percent_indicator:
   day_night_switcher:

@@ -17,6 +17,7 @@ import 'package:flutter/widgets.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:animations/animations.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 
 class IndividualList extends StatefulWidget {
   final int listid;
@@ -144,9 +145,14 @@ class _IndividualListState extends State<IndividualList> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(hideCompleted ? 'Show Completed': 'Hide Completed',
+                                  Text(
+                                      hideCompleted
+                                          ? 'Hide Completed'
+                                          : 'Show Completed',
                                       style: TextStyle(fontSize: 13)),
-                                  hideCompleted ? Icon(Feather.eye) : Icon(Feather.eye_off),
+                                  hideCompleted
+                                      ? Icon(Feather.eye_off)
+                                      : Icon(Feather.eye),
                                 ],
                               ),
                             ),
@@ -169,9 +175,9 @@ class _IndividualListState extends State<IndividualList> {
                           onSelected: (int value) async {
                             switch (value) {
                               case 1:
-                                  setState(() {
-                                    hideCompleted = !hideCompleted;
-                                  });
+                                setState(() {
+                                  hideCompleted = !hideCompleted;
+                                });
                                 break;
                               case 2:
                                 var delete = await ItemService()
@@ -218,15 +224,11 @@ class _IndividualListState extends State<IndividualList> {
             margin20,
             Expanded(
                 child: FutureBuilder(
-              future: hideCompleted ? ItemService().fetchItems(widget.listid,'hide') : ItemService().fetchItems(widget.listid,'show'),
+              future: hideCompleted
+                  ? ItemService().fetchItems(widget.listid, 'show')
+                  : ItemService().fetchItems(widget.listid, 'hide'),
               builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data.length == 0) {
-                  return Container(
-                    alignment: Alignment.center,
-                    child: Lottie.asset('assets/images/empty.json',
-                        height: 500, animate: true),
-                  );
-                } else if (snapshot.hasData && snapshot.data.length > 0) {
+                if (snapshot.hasData && snapshot.data.length > 0) {
                   List<ItemModel> data = snapshot.data;
                   List<ItemMapper> _text = [];
                   data.forEach((item) {
@@ -412,8 +414,24 @@ class _IndividualListState extends State<IndividualList> {
                       );
                     }).toList(),
                   );
+                } else if (snapshot.hasData) {
+                  return Container(
+                    alignment: Alignment.center,
+                    child: Lottie.asset('assets/images/empty.json',
+                        height: 500, animate: true),
+                  );
                 }
-                return CircularProgressIndicator();
+                return Shimmer.fromColors(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.black,
+                      ),
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                    ),
+                    baseColor: Colors.grey[300],
+                    highlightColor: Colors.grey[400]);
               },
             )),
           ],

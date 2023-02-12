@@ -16,16 +16,6 @@ ToastFuture displayToast(msg, context, color) {
   );
 }
 
-// Future<dynamic> displayDialog(context) {
-//   return showDialog(
-//       context: context,
-//       builder: (context) {
-//         return Center(
-//           child: CircularProgressIndicator(),
-//         );
-//       });
-// }
-
 Future displayDialog(msg, context, controller, boolean, page) {
   return showDialog(
     barrierDismissible: false,

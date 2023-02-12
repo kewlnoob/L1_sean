@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeMenu extends StatefulWidget {
   @override
@@ -95,8 +96,9 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        leading: Builder(builder: (context) {
-          return IconButton(
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
               icon: AnimatedIcon(
@@ -104,8 +106,10 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                 icon: AnimatedIcons.menu_close,
                 progress: controller,
               ),
-              onPressed: () => {animate(), ZoomDrawer.of(context).toggle()});
-        }),
+              onPressed: () => {animate(), ZoomDrawer.of(context).toggle()},
+            );
+          },
+        ),
         elevation: 0,
         backgroundColor: Colors.transparent,
         actions: [
@@ -127,7 +131,6 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                 right: 40,
               ),
               child: Container(
-                // width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -217,7 +220,7 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                           ),
                     SizedBox(height: 10),
                     animated
-                        ? FadeAnimation(2.5, 'up', futureList())
+                        ? FadeAnimation(2.5, 'fadeIn', futureList())
                         : futureList()
                   ],
                 ),
@@ -242,8 +245,9 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
                                   Theme.of(context).scaffoldBackgroundColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(50),
-                                    topLeft: Radius.circular(50)),
+                                  topRight: Radius.circular(50),
+                                  topLeft: Radius.circular(50),
+                                ),
                               ),
                               context: context,
                               builder: (context) => Container(
@@ -345,127 +349,142 @@ class _HomeMenuState extends State<HomeMenu> with TickerProviderStateMixin {
 
   Widget futureList() {
     return FutureBuilder(
-        future: ListService().fetchList(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data.length > 0) {
-            var item = snapshot.data;
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: 300,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        if (item[index].id == null &&
-                            item[index].listname == null) {
-                          displayToast("ListName and ListId is null", context,
-                              failColor);
-                        }
-                        Navigator.pushNamed(context, '/list', arguments: {
-                          'listid': int.parse(item[index].id),
-                          'listname': item[index].listname,
-                        });
-                      },
-                      child: Container(
-                        child: Slidable(
-                          key: Key(item[index].listname),
-                          actionPane: SlidableDrawerActionPane(),
-                          secondaryActions: [
-                            IconSlideAction(
-                              caption: 'Info',
-                              color: thirdColor,
-                              icon: Feather.info,
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/addlist',
-                                  arguments: {
-                                    'iconid': int.parse(item[index].iconid),
-                                    'colorid': int.parse(item[index].colorid),
-                                    'id': item[index].id,
-                                    'listname': item[index].listname,
-                                    'categoryid': item[index].categoryid
-                                  },
-                                );
-                              },
-                            ),
-                            IconSlideAction(
-                              caption: 'Delete',
-                              color: redColor,
-                              icon: MaterialCommunityIcons.delete,
-                              onTap: () async {
-                                var deletelist = await ListService()
-                                    .deleteList(item[index].id);
-                                if (deletelist) {
-                                  setState(() {
-                                    animated = false;
-                                  });
-                                  displayDialog('Success', context, popup, true,
-                                      'homemenu');
-                                } else {
-                                  displayDialog('Fail', context, popup, false,
-                                      'homemenu');
-                                }
-                              },
-                            ),
-                          ],
+      future: ListService().fetchList(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data.length > 0) {
+          var item = snapshot.data;
+          return ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: 300,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      if (item[index].id == null &&
+                          item[index].listname == null) {
+                        displayToast(
+                            "ListName and ListId is null", context, failColor);
+                      }
+                      Navigator.pushNamed(context, '/list', arguments: {
+                        'listid': int.parse(item[index].id),
+                        'listname': item[index].listname,
+                      });
+                    },
+                    child: Container(
+                      child: Slidable(
+                        key: Key(item[index].listname),
+                        actionPane: SlidableDrawerActionPane(),
+                        secondaryActions: [
+                          IconSlideAction(
+                            caption: 'Info',
+                            color: thirdColor,
+                            icon: Feather.info,
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/addlist',
+                                arguments: {
+                                  'iconid': int.parse(item[index].iconid),
+                                  'colorid': int.parse(item[index].colorid),
+                                  'id': item[index].id,
+                                  'listname': item[index].listname,
+                                  'categoryid': item[index].categoryid
+                                },
+                              );
+                            },
+                          ),
+                          IconSlideAction(
+                            caption: 'Delete',
+                            color: redColor,
+                            icon: MaterialCommunityIcons.delete,
+                            onTap: () async {
+                              var deletelist = await ListService()
+                                  .deleteList(item[index].id);
+                              if (deletelist) {
+                                setState(() {
+                                  animated = false;
+                                });
+                                fetchCounts();
+                                displayDialog('Success', context, popup, true,
+                                    'homemenu');
+                              } else {
+                                displayDialog(
+                                    'Fail', context, popup, false, 'homemenu');
+                              }
+                            },
+                          ),
+                        ],
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: secondaryColor,
+                            image: DecorationImage(
+                                image:
+                                    AssetImage('assets/images/dashboard.png'),
+                                fit: BoxFit.fill),
+                          ),
+                          width: MediaQuery.of(context).size.width,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: secondaryColor,
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage('assets/images/dashboard.png'),
-                                  fit: BoxFit.fill),
+                              border: Border(
+                                  bottom: BorderSide(
+                                      width: 1, color: Colors.white)),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(
+                                    int.parse(item[index].color),
+                                  ).withOpacity(0.9),
+                                  Color(
+                                    int.parse(item[index].color),
+                                  ).withOpacity(0.5)
+                                ],
+                              ),
                             ),
-                            width: MediaQuery.of(context).size.width,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        width: 1, color: Colors.white)),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(int.parse(item[index].color))
-                                        .withOpacity(0.9),
-                                    Color(int.parse(item[index].color))
-                                        .withOpacity(0.5)
-                                  ],
-                                ),
+                            child: ListTile(
+                              leading: Icon(
+                                  IconData(int.parse(item[index].icon),
+                                      fontFamily: 'MaterialIcons'),
+                                  color: Colors.white),
+                              title: Text(
+                                item[index].listname,
+                                style: whiteText,
                               ),
-                              child: ListTile(
-                                leading: Icon(
-                                    IconData(int.parse(item[index].icon),
-                                        fontFamily: 'MaterialIcons'),
-                                    color: Colors.white),
-                                title: Text(
-                                  item[index].listname,
-                                  style: whiteText,
-                                ),
-                                trailing: Icon(Icons.arrow_forward_ios_rounded,
-                                    color: Colors.white),
-                              ),
+                              trailing: Icon(Icons.arrow_forward_ios_rounded,
+                                  color: Colors.white),
                             ),
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-            );
-          } else if (snapshot.hasData) {
-            return Container(
-              alignment: Alignment.center,
-              child: Lottie.asset('assets/images/empty.json',
-                  height: 300, animate: true),
-            );
-          }
-          return CircularProgressIndicator();
-        });
+            ),
+          );
+        } else if (snapshot.hasData) {
+          return Container(
+            alignment: Alignment.center,
+            child: Lottie.asset('assets/images/empty.json',
+                height: 300, animate: true),
+          );
+        }
+        return Shimmer.fromColors(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.black,
+            ),
+            height: 200,
+            width: MediaQuery.of(context).size.width,
+          ),
+          baseColor: Colors.grey[300],
+          highlightColor: Colors.grey[400],
+        );
+      },
+    );
   }
 }

@@ -124,13 +124,17 @@ class ListService {
     return null;
   }
 
-  Future<List<ListModel>> fetchListByCategory(String categoryid) async {
-    var url = "$ipAddress/fetchListByCategory.php?categoryid=" + categoryid;
-    final response = await http.get(url);
-    if (jsonDecode(response.body) != null) {
-      return listFromJson(response.body);
+  Future<List<ListModel>> fetchListByCategory(String categoryid,String page) async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('user');
+    if (value != null) {
+      var url = "$ipAddress/fetchListByCategory.php?categoryid=" + categoryid + 
+      "&userid=" + jsonDecode(value)['userid'] + "&page=" + page;
+      final response = await http.get(url);
+      if (jsonDecode(response.body) != null) {
+        return listFromJson(response.body);
+      }
     }
-
     return null;
   }
 
@@ -230,5 +234,4 @@ class ListService {
     }
     return null;
   }
-
 }

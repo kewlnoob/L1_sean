@@ -162,7 +162,7 @@ class _DisplayState extends State<Display> {
                             children: [
                               FutureBuilder(
                                 future: ListService().fetchListByCategory(
-                                    categories[index].categoryId),
+                                    categories[index].categoryId,widget.page),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
                                     List<ListModel> list = snapshot.data;

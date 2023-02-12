@@ -47,8 +47,22 @@ class FadeAnimation extends StatelessWidget {
           builderWithChild: (context, child, animation) => Opacity(
             opacity: animation["opacity"],
             child: Transform.translate(
-                offset: Offset(animation["translateX"],0), child: child),
+                offset: Offset(animation["translateX"], 0), child: child),
           ),
+        );
+        break;
+      case 'fadeIn':
+        final tween = MultiTrackTween([
+          Track("opacity")
+              .add(Duration(milliseconds: 400), Tween(begin: 0.0, end: 1.0)),
+        ]);
+        return ControlledAnimation(
+          delay: Duration(milliseconds: (500 * delay).round()),
+          duration: tween.duration,
+          tween: tween,
+          child: child,
+          builderWithChild: (context, child, animation) =>
+              Opacity(opacity: animation["opacity"], child: child),
         );
         break;
     }
