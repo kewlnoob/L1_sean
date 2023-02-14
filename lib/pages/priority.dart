@@ -106,7 +106,8 @@ class _PriorityState extends State<Priority> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
-                            widget.callback(snapshot.data[index].name, (index+1).toString());
+                            widget.callback(snapshot.data[index].name,
+                                (index + 1).toString());
                             setState(() {
                               selectedIndex = index.toString();
                             });
@@ -126,7 +127,9 @@ class _PriorityState extends State<Priority> {
                                 ),
                                 trailing: selectedIndex != null &&
                                         index.toString() == selectedIndex
-                                    ? Icon(AntDesign.check, color: Colors.black)
+                                    ? Icon(AntDesign.check,
+                                        color:
+                                            Theme.of(context).iconTheme.color)
                                     : null),
                           ),
                         );

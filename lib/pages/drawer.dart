@@ -36,7 +36,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
   findImage() async {
     var user = await AuthService().getUserInfo();
-    if(user != null){
+    if (user != null) {
       this.setState(() {
         image = imagelink + user.image;
       });

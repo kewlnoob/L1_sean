@@ -33,7 +33,7 @@ class _StatisticsState extends State<Statistics> {
           children: [ButtonArrow(context, 'home')],
         ),
         title: Text(
-          'Statistics',
+          'Statistics (Completed)',
           style: Theme.of(context).textTheme.headline2,
         ),
         centerTitle: true,
@@ -73,8 +73,9 @@ class _StatisticsState extends State<Statistics> {
                                       (calculate(
                                                   double.parse(
                                                       list[index].totalItems),
-                                                  double.parse(
-                                                      list[index].completed) * 100))
+                                                  double.parse(list[index]
+                                                          .completed) *
+                                                      100))
                                               .toStringAsFixed(0) +
                                           "%",
                                       style: TextStyle(
